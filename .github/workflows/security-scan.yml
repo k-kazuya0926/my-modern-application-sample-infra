@@ -1,0 +1,36 @@
+name: security-scan
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  schedule:
+    # 毎日午前6時（JST）に実行
+    - cron: "0 21 * * *"
+  workflow_dispatch:
+defaults: # パイプエラーを拾えるようにデフォルトシェルを設定
+  run:
+    shell: bash
+concurrency: # コミット追加時に古いワークフローの実行を自動キャンセル
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  security-scan:
+    name: Security Scan
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Run Trivy vulnerability scanner for summary
+        uses: aquasecurity/trivy-action@0.31.0
+        with:
+          scan-type: "fs"
+          scan-ref: "."
+          format: "table"
+          severity: "CRITICAL,HIGH,MEDIUM"
+          exit-code: "1" # 問題が見つかった場合ワークフローを失敗させる
+          ignore-unfixed: true # 修正不可能な問題を無視
+          cache: "true"
