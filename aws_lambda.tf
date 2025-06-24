@@ -1,5 +1,5 @@
 module "lambda_hello_world" {
-  source = "./lambda"
+  source = "./modules/lambda"
 
   function_name      = "${local.project_name}-hello-world"
   execution_role_arn = module.hello_world_role.iam_role_arn
@@ -7,7 +7,7 @@ module "lambda_hello_world" {
 }
 
 module "lambda_tmp" {
-  source = "./lambda"
+  source = "./modules/lambda"
 
   function_name      = "${local.project_name}-tmp"
   execution_role_arn = module.tmp_role.iam_role_arn

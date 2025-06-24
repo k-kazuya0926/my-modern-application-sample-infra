@@ -1,11 +1,11 @@
 module "ecr_hello_world" {
-  source = "./ecr"
+  source = "./modules/ecr"
 
   repository_name = "${local.project_name}-hello-world"
 }
 
 module "ecr_tmp" {
-  source = "./ecr"
+  source = "./modules/ecr"
 
   repository_name = "${local.project_name}-tmp"
 }

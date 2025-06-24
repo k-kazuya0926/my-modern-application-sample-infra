@@ -2,7 +2,7 @@ data "aws_caller_identity" "current" {}
 data "aws_region" "current" {}
 
 module "hello_world_role" {
-  source     = "./iam_role"
+  source     = "./modules/iam_role"
   base_name  = "${local.project_name}-hello-world"
   policy     = data.aws_iam_policy_document.hello_world.json
   identifier = "lambda.amazonaws.com"
@@ -27,7 +27,7 @@ data "aws_iam_policy_document" "hello_world" {
 
 
 module "tmp_role" {
-  source     = "./iam_role"
+  source     = "./modules/iam_role"
   base_name  = "${local.project_name}-tmp"
   policy     = data.aws_iam_policy_document.tmp.json
   identifier = "lambda.amazonaws.com"
