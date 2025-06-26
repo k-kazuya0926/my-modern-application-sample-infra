@@ -1,3 +1,13 @@
+variable "project_name" {
+  description = "プロジェクト名"
+  type        = string
+}
+
+variable "env" {
+  description = "環境"
+  type        = string
+}
+
 variable "repository_name" {
   description = "Name of the ECR repository"
   type        = string
@@ -17,10 +27,4 @@ variable "scan_on_push" {
   description = "Indicates whether images are scanned after being pushed to the repository"
   type        = bool
   default     = true
-}
-
-variable "tags" {
-  description = "A map of tags to assign to the resource"
-  type        = map(string)
-  default     = {}
 }

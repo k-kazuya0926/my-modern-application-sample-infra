@@ -2,10 +2,12 @@ data "aws_caller_identity" "current" {}
 data "aws_region" "current" {}
 
 module "hello_world_role" {
-  source     = "./modules/iam_role"
-  base_name  = "${local.project_name}-hello-world"
-  policy     = data.aws_iam_policy_document.hello_world.json
-  identifier = "lambda.amazonaws.com"
+  source       = "./modules/iam_role"
+  project_name = local.project_name
+  env          = local.environments.prod
+  role_name    = "hello-world"
+  policy       = data.aws_iam_policy_document.hello_world.json
+  identifier   = "lambda.amazonaws.com"
 }
 
 data "aws_iam_policy_document" "hello_world" {
@@ -21,16 +23,18 @@ data "aws_iam_policy_document" "hello_world" {
       "logs:CreateLogStream",
       "logs:PutLogEvents"
     ]
-    resources = ["arn:aws:logs:${data.aws_region.current.id}:${data.aws_caller_identity.current.account_id}:log-group:/aws/lambda/${local.project_name}-hello-world:*"]
+    resources = ["arn:aws:logs:${data.aws_region.current.id}:${data.aws_caller_identity.current.account_id}:log-group:/aws/lambda/${local.project_name}-prod-hello-world:*"]
   }
 }
 
 
 module "tmp_role" {
-  source     = "./modules/iam_role"
-  base_name  = "${local.project_name}-tmp"
-  policy     = data.aws_iam_policy_document.tmp.json
-  identifier = "lambda.amazonaws.com"
+  source       = "./modules/iam_role"
+  project_name = local.project_name
+  env          = local.environments.prod
+  role_name    = "tmp"
+  policy       = data.aws_iam_policy_document.tmp.json
+  identifier   = "lambda.amazonaws.com"
 }
 
 data "aws_iam_policy_document" "tmp" {
@@ -46,7 +50,7 @@ data "aws_iam_policy_document" "tmp" {
       "logs:CreateLogStream",
       "logs:PutLogEvents"
     ]
-    resources = ["arn:aws:logs:${data.aws_region.current.id}:${data.aws_caller_identity.current.account_id}:log-group:/aws/lambda/${local.project_name}-tmp:*"]
+    resources = ["arn:aws:logs:${data.aws_region.current.id}:${data.aws_caller_identity.current.account_id}:log-group:/aws/lambda/${local.project_name}-prod-tmp:*"]
   }
 }
 
