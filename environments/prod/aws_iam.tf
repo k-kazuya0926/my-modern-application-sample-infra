@@ -3,7 +3,7 @@ data "aws_region" "current" {}
 
 module "hello_world_role" {
   source       = "../../modules/iam_role"
-  project_name = local.project_name
+  project_name = var.project_name
   env          = var.env
   role_name    = "hello-world"
   policy       = data.aws_iam_policy_document.hello_world.json
@@ -23,14 +23,14 @@ data "aws_iam_policy_document" "hello_world" {
       "logs:CreateLogStream",
       "logs:PutLogEvents"
     ]
-    resources = ["arn:aws:logs:${data.aws_region.current.id}:${data.aws_caller_identity.current.account_id}:log-group:/aws/lambda/${local.project_name}-${var.env}-hello-world:*"]
+    resources = ["arn:aws:logs:${data.aws_region.current.id}:${data.aws_caller_identity.current.account_id}:log-group:/aws/lambda/${var.project_name}-${var.env}-hello-world:*"]
   }
 }
 
 
 module "tmp_role" {
   source       = "../../modules/iam_role"
-  project_name = local.project_name
+  project_name = var.project_name
   env          = var.env
   role_name    = "tmp"
   policy       = data.aws_iam_policy_document.tmp.json
@@ -50,7 +50,7 @@ data "aws_iam_policy_document" "tmp" {
       "logs:CreateLogStream",
       "logs:PutLogEvents"
     ]
-    resources = ["arn:aws:logs:${data.aws_region.current.id}:${data.aws_caller_identity.current.account_id}:log-group:/aws/lambda/${local.project_name}-${var.env}-tmp:*"]
+    resources = ["arn:aws:logs:${data.aws_region.current.id}:${data.aws_caller_identity.current.account_id}:log-group:/aws/lambda/${var.project_name}-${var.env}-tmp:*"]
   }
 }
 
@@ -68,12 +68,12 @@ resource "aws_iam_openid_connect_provider" "github_actions" {
   ]
 
   tags = {
-    Name = "${local.project_name}-github-actions-oidc"
+    Name = "${var.project_name}-github-actions-oidc"
   }
 }
 
 resource "aws_iam_role" "github_actions" {
-  name               = "${local.project_name}-github-actions-role"
+  name               = "${var.project_name}-github-actions-role"
   assume_role_policy = data.aws_iam_policy_document.github_actions_assume_role.json
 }
 
@@ -90,7 +90,7 @@ data "aws_iam_policy_document" "github_actions_assume_role" {
     condition {
       test     = "StringLike"
       variable = "token.actions.githubusercontent.com:sub"
-      values   = ["repo:${local.github_owner_name}/${local.project_name}:*"]
+      values   = ["repo:${var.github_owner_name}/${var.project_name}:*"]
     }
 
     condition {
@@ -102,7 +102,7 @@ data "aws_iam_policy_document" "github_actions_assume_role" {
 }
 
 resource "aws_iam_policy" "github_actions" {
-  name   = "${local.project_name}-github-actions-policy"
+  name   = "${var.project_name}-github-actions-policy"
   policy = data.aws_iam_policy_document.github_actions.json
 }
 
@@ -129,8 +129,8 @@ data "aws_iam_policy_document" "github_actions" {
       "ecr:UploadLayerPart"
     ]
     resources = [
-      "arn:aws:ecr:${data.aws_region.current.id}:${data.aws_caller_identity.current.account_id}:repository/${local.project_name}-${var.env}-hello-world",
-      "arn:aws:ecr:${data.aws_region.current.id}:${data.aws_caller_identity.current.account_id}:repository/${local.project_name}-${var.env}-tmp"
+      "arn:aws:ecr:${data.aws_region.current.id}:${data.aws_caller_identity.current.account_id}:repository/${var.project_name}-${var.env}-hello-world",
+      "arn:aws:ecr:${data.aws_region.current.id}:${data.aws_caller_identity.current.account_id}:repository/${var.project_name}-${var.env}-tmp"
     ]
   }
 
@@ -145,10 +145,10 @@ data "aws_iam_policy_document" "github_actions" {
       "lambda:UpdateAlias"
     ]
     resources = [
-      "arn:aws:lambda:${data.aws_region.current.id}:${data.aws_caller_identity.current.account_id}:function:${local.project_name}-${var.env}-hello-world",
-      "arn:aws:lambda:${data.aws_region.current.id}:${data.aws_caller_identity.current.account_id}:function:${local.project_name}-${var.env}-hello-world:*",
-      "arn:aws:lambda:${data.aws_region.current.id}:${data.aws_caller_identity.current.account_id}:function:${local.project_name}-${var.env}-tmp",
-      "arn:aws:lambda:${data.aws_region.current.id}:${data.aws_caller_identity.current.account_id}:function:${local.project_name}-${var.env}-tmp:*"
+      "arn:aws:lambda:${data.aws_region.current.id}:${data.aws_caller_identity.current.account_id}:function:${var.project_name}-${var.env}-hello-world",
+      "arn:aws:lambda:${data.aws_region.current.id}:${data.aws_caller_identity.current.account_id}:function:${var.project_name}-${var.env}-hello-world:*",
+      "arn:aws:lambda:${data.aws_region.current.id}:${data.aws_caller_identity.current.account_id}:function:${var.project_name}-${var.env}-tmp",
+      "arn:aws:lambda:${data.aws_region.current.id}:${data.aws_caller_identity.current.account_id}:function:${var.project_name}-${var.env}-tmp:*"
     ]
   }
 }

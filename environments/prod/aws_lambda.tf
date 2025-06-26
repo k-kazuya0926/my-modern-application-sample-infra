@@ -1,7 +1,7 @@
 module "lambda_hello_world" {
   source = "../../modules/lambda"
 
-  project_name       = local.project_name
+  project_name       = var.project_name
   env                = var.env
   function_name      = "hello-world"
   execution_role_arn = module.hello_world_role.iam_role_arn
@@ -11,7 +11,7 @@ module "lambda_hello_world" {
 module "lambda_tmp" {
   source = "../../modules/lambda"
 
-  project_name       = local.project_name
+  project_name       = var.project_name
   env                = var.env
   function_name      = "tmp"
   execution_role_arn = module.tmp_role.iam_role_arn
