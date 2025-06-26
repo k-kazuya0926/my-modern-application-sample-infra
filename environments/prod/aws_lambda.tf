@@ -15,5 +15,5 @@ module "lambda_tmp" {
   env                = var.env
   function_name      = "tmp"
   execution_role_arn = module.tmp_role.iam_role_arn
-  image_uri          = "${module.ecr_tmp.repository_url}:sha-dummy"
+  image_uri          = "${module.ecr_tmp.repository_url}:dummy"
 }
