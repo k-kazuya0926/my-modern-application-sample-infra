@@ -66,18 +66,14 @@ resource "aws_iam_openid_connect_provider" "github_actions" {
     "6938fd4d98bab03faadb97b34396831e3780aea1",
     "1c58a3a8518e8759bf075b76b750d4f2df264fcd"
   ]
-
-  tags = {
-    Name = "${var.project_name}-github-actions-oidc"
-  }
 }
 
 resource "aws_iam_role" "github_actions" {
-  name               = "${var.project_name}-github-actions-role"
-  assume_role_policy = data.aws_iam_policy_document.github_actions_assume_role.json
+  name               = "${var.project_name}-${var.env}-github-actions"
+  assume_role_policy = data.aws_iam_policy_document.github_actions_assume.json
 }
 
-data "aws_iam_policy_document" "github_actions_assume_role" {
+data "aws_iam_policy_document" "github_actions_assume" {
   statement {
     effect  = "Allow"
     actions = ["sts:AssumeRoleWithWebIdentity"]
@@ -102,7 +98,7 @@ data "aws_iam_policy_document" "github_actions_assume_role" {
 }
 
 resource "aws_iam_policy" "github_actions" {
-  name   = "${var.project_name}-github-actions-policy"
+  name   = "${var.project_name}-${var.env}-github-actions"
   policy = data.aws_iam_policy_document.github_actions.json
 }
 
