@@ -1,59 +1,19 @@
 data "aws_caller_identity" "current" {}
 data "aws_region" "current" {}
 
-module "hello_world_role" {
-  source       = "../../modules/iam_role"
+module "lambda_execution_role_hello_world" {
+  source       = "../../modules/lambda_execution_role"
   project_name = var.project_name
   env          = var.env
   role_name    = "hello-world"
-  policy       = data.aws_iam_policy_document.hello_world.json
-  identifier   = "lambda.amazonaws.com"
 }
 
-data "aws_iam_policy_document" "hello_world" {
-  statement {
-    effect    = "Allow"
-    actions   = ["logs:CreateLogGroup"]
-    resources = ["arn:aws:logs:${data.aws_region.current.id}:${data.aws_caller_identity.current.account_id}:*"]
-  }
-
-  statement {
-    effect = "Allow"
-    actions = [
-      "logs:CreateLogStream",
-      "logs:PutLogEvents"
-    ]
-    resources = ["arn:aws:logs:${data.aws_region.current.id}:${data.aws_caller_identity.current.account_id}:log-group:/aws/lambda/${var.project_name}-${var.env}-hello-world:*"]
-  }
-}
-
-
-module "tmp_role" {
-  source       = "../../modules/iam_role"
+module "lambda_execution_role_tmp" {
+  source       = "../../modules/lambda_execution_role"
   project_name = var.project_name
   env          = var.env
   role_name    = "tmp"
-  policy       = data.aws_iam_policy_document.tmp.json
-  identifier   = "lambda.amazonaws.com"
 }
-
-data "aws_iam_policy_document" "tmp" {
-  statement {
-    effect    = "Allow"
-    actions   = ["logs:CreateLogGroup"]
-    resources = ["arn:aws:logs:${data.aws_region.current.id}:${data.aws_caller_identity.current.account_id}:*"]
-  }
-
-  statement {
-    effect = "Allow"
-    actions = [
-      "logs:CreateLogStream",
-      "logs:PutLogEvents"
-    ]
-    resources = ["arn:aws:logs:${data.aws_region.current.id}:${data.aws_caller_identity.current.account_id}:log-group:/aws/lambda/${var.project_name}-${var.env}-tmp:*"]
-  }
-}
-
 
 module "github_actions_openid_connect_provider" {
   source            = "../../modules/github_actions_openid_connect_provider"

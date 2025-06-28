@@ -8,6 +8,7 @@ variable "env" {
   type        = string
 }
 
-variable "role_name" {}
-variable "policy" {}
-variable "identifier" {}
+variable "role_name" {
+  description = "ロール名"
+  type        = string
+}
