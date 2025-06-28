@@ -13,4 +13,7 @@ variable "env" {
   type        = string
 }
 
-variable "policy" {}
+variable "iam_openid_connect_provider_arn" {
+  description = "IAM OpenID Connect Provider ARN"
+  type        = string
+}
