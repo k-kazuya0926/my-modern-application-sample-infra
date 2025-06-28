@@ -1,13 +1,13 @@
 module "ecr_hello_world" {
-  source          = "../../modules/ecr"
-  project_name    = var.project_name
-  env             = var.env
-  repository_name = "hello-world"
+  source                 = "../../modules/ecr"
+  github_repository_name = var.github_repository_name
+  env                    = var.env
+  ecr_repository_name    = "hello-world"
 }
 
 module "ecr_tmp" {
-  source          = "../../modules/ecr"
-  project_name    = var.project_name
-  env             = var.env
-  repository_name = "tmp"
+  source                 = "../../modules/ecr"
+  github_repository_name = var.github_repository_name
+  env                    = var.env
+  ecr_repository_name    = "tmp"
 }

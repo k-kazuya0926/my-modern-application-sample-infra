@@ -1,30 +1,30 @@
-variable "project_name" {
-  description = "プロジェクト名"
+variable "github_repository_name" {
+  description = "GitHubリポジトリ名"
   type        = string
 }
 
 variable "env" {
-  description = "環境"
+  description = "環境名"
   type        = string
 }
 
-variable "repository_name" {
-  description = "Name of the ECR repository"
+variable "ecr_repository_name" {
+  description = "ECRリポジトリ名"
   type        = string
 }
 
 variable "image_tag_mutability" {
-  description = "The tag mutability setting for the repository"
+  description = "イメージタグの変更設定"
   type        = string
   default     = "IMMUTABLE"
   validation {
     condition     = contains(["MUTABLE", "IMMUTABLE"], var.image_tag_mutability)
-    error_message = "Image tag mutability must be either MUTABLE or IMMUTABLE."
+    error_message = "イメージタグの変更設定はMUTABLEまたはIMMUTABLEである必要があります。"
   }
 }
 
 variable "scan_on_push" {
-  description = "Indicates whether images are scanned after being pushed to the repository"
+  description = "イメージがリポジトリにプッシュされた後にスキャンされるかどうか"
   type        = bool
   default     = true
 }

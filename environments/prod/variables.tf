@@ -1,16 +1,14 @@
 variable "github_owner_name" {
   type        = string
-  description = "GitHub owner name"
-  default     = "k-kazuya0926"
+  description = "GitHubオーナー名"
 }
 
-variable "project_name" {
+variable "github_repository_name" {
   type        = string
-  description = "Project name"
-  default     = "my-modern-application-sample"
+  description = "GitHubリポジトリ名"
 }
 
 variable "env" {
   type        = string
-  description = "Environment name"
+  description = "環境名"
 }

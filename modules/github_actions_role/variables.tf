@@ -1,15 +1,15 @@
 variable "github_owner_name" {
-  description = "GitHub のオーナー名"
+  description = "GitHubオーナー名"
   type        = string
 }
 
-variable "project_name" {
-  description = "プロジェクト名"
+variable "github_repository_name" {
+  description = "GitHubリポジトリ名"
   type        = string
 }
 
 variable "env" {
-  description = "環境"
+  description = "環境名"
   type        = string
 }
 
