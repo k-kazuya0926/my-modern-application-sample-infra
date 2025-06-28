@@ -1,6 +1,5 @@
 module "lambda_hello_world" {
-  source = "../../modules/lambda"
-
+  source             = "../../modules/lambda"
   project_name       = var.project_name
   env                = var.env
   function_name      = "hello-world"
@@ -9,8 +8,7 @@ module "lambda_hello_world" {
 }
 
 module "lambda_tmp" {
-  source = "../../modules/lambda"
-
+  source             = "../../modules/lambda"
   project_name       = var.project_name
   env                = var.env
   function_name      = "tmp"
