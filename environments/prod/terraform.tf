@@ -10,6 +10,6 @@ terraform {
 
   backend "s3" {
     # 他の項目は terraform init -backend-config=backend.hcl により設定
-    key = "terraform.tfstate"
+    key = "prod/terraform.tfstate"
   }
 }
