@@ -13,3 +13,7 @@ terraform {
     key = "prod/terraform.tfstate"
   }
 }
+
+provider "aws" {
+  region = "ap-northeast-1"
+}
