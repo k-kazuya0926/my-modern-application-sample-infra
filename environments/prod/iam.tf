@@ -23,6 +23,7 @@ data "aws_iam_policy_document" "lambda_hello_world" {
   }
 }
 
+
 module "lambda_execution_role_tmp" {
   source                 = "../../modules/lambda_execution_role"
   github_repository_name = var.github_repository_name
@@ -48,9 +49,59 @@ data "aws_iam_policy_document" "lambda_tmp" {
   }
 }
 
+
 module "github_actions_openid_connect_provider" {
   source = "../../modules/github_actions_openid_connect_provider"
 }
+
+
+module "lambda_execution_role_read_and_write_s3" {
+  source                 = "../../modules/lambda_execution_role"
+  github_repository_name = var.github_repository_name
+  env                    = local.env
+  role_name              = "read-and-write-s3"
+  policy                 = data.aws_iam_policy_document.lambda_read_and_write_s3.json
+}
+
+data "aws_iam_policy_document" "lambda_read_and_write_s3" {
+  statement {
+    effect    = "Allow"
+    actions   = ["logs:CreateLogGroup"]
+    resources = ["arn:aws:logs:${data.aws_region.current.id}:${data.aws_caller_identity.current.account_id}:*"]
+  }
+
+  statement {
+    effect = "Allow"
+    actions = [
+      "logs:CreateLogStream",
+      "logs:PutLogEvents"
+    ]
+    resources = ["arn:aws:logs:${data.aws_region.current.id}:${data.aws_caller_identity.current.account_id}:log-group:/aws/lambda/${var.github_repository_name}-${local.env}-read-and-write-s3:*"]
+  }
+
+  statement {
+    effect = "Allow"
+    actions = [
+      "s3:GetObject",
+      "s3:ListBucket"
+    ]
+    resources = [
+      "arn:aws:s3:::${var.github_repository_name}-${local.env}-read",
+      "arn:aws:s3:::${var.github_repository_name}-${local.env}-read/*"
+    ]
+  }
+
+  statement {
+    effect = "Allow"
+    actions = [
+      "s3:PutObject",
+    ]
+    resources = [
+      "arn:aws:s3:::${var.github_repository_name}-${local.env}-write/*"
+    ]
+  }
+}
+
 
 module "github_actions_role" {
   source                          = "../../modules/github_actions_role"
