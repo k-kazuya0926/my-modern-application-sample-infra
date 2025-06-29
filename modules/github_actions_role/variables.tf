@@ -17,3 +17,8 @@ variable "iam_openid_connect_provider_arn" {
   description = "IAM OpenID Connect Provider ARN"
   type        = string
 }
+
+variable "policy" {
+  description = "IAMポリシー"
+  type        = string
+}
