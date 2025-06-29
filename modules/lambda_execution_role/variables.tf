@@ -12,3 +12,8 @@ variable "role_name" {
   description = "ロール名"
   type        = string
 }
+
+variable "policy" {
+  description = "IAMポリシー"
+  type        = string
+}

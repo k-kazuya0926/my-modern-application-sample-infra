@@ -19,24 +19,7 @@ data "aws_iam_policy_document" "assume_role" {
 
 resource "aws_iam_policy" "this" {
   name   = "${var.github_repository_name}-${var.env}-${var.role_name}"
-  policy = data.aws_iam_policy_document.this.json
-}
-
-data "aws_iam_policy_document" "this" {
-  statement {
-    effect    = "Allow"
-    actions   = ["logs:CreateLogGroup"]
-    resources = ["arn:aws:logs:${data.aws_region.current.id}:${data.aws_caller_identity.current.account_id}:*"]
-  }
-
-  statement {
-    effect = "Allow"
-    actions = [
-      "logs:CreateLogStream",
-      "logs:PutLogEvents"
-    ]
-    resources = ["arn:aws:logs:${data.aws_region.current.id}:${data.aws_caller_identity.current.account_id}:log-group:/aws/lambda/${var.github_repository_name}-${var.env}-${var.role_name}:*"]
-  }
+  policy = var.policy
 }
 
 resource "aws_iam_role_policy_attachment" "this" {

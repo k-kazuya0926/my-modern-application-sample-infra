@@ -3,6 +3,24 @@ module "lambda_execution_role_hello_world" {
   github_repository_name = var.github_repository_name
   env                    = local.env
   role_name              = "hello-world"
+  policy                 = data.aws_iam_policy_document.lambda_hello_world.json
+}
+
+data "aws_iam_policy_document" "lambda_hello_world" {
+  statement {
+    effect    = "Allow"
+    actions   = ["logs:CreateLogGroup"]
+    resources = ["arn:aws:logs:${data.aws_region.current.id}:${data.aws_caller_identity.current.account_id}:*"]
+  }
+
+  statement {
+    effect = "Allow"
+    actions = [
+      "logs:CreateLogStream",
+      "logs:PutLogEvents"
+    ]
+    resources = ["arn:aws:logs:${data.aws_region.current.id}:${data.aws_caller_identity.current.account_id}:log-group:/aws/lambda/${var.github_repository_name}-${local.env}-hello-world:*"]
+  }
 }
 
 module "lambda_execution_role_tmp" {
@@ -10,6 +28,24 @@ module "lambda_execution_role_tmp" {
   github_repository_name = var.github_repository_name
   env                    = local.env
   role_name              = "tmp"
+  policy                 = data.aws_iam_policy_document.lambda_tmp.json
+}
+
+data "aws_iam_policy_document" "lambda_tmp" {
+  statement {
+    effect    = "Allow"
+    actions   = ["logs:CreateLogGroup"]
+    resources = ["arn:aws:logs:${data.aws_region.current.id}:${data.aws_caller_identity.current.account_id}:*"]
+  }
+
+  statement {
+    effect = "Allow"
+    actions = [
+      "logs:CreateLogStream",
+      "logs:PutLogEvents"
+    ]
+    resources = ["arn:aws:logs:${data.aws_region.current.id}:${data.aws_caller_identity.current.account_id}:log-group:/aws/lambda/${var.github_repository_name}-${local.env}-tmp:*"]
+  }
 }
 
 module "github_actions_openid_connect_provider" {
