@@ -11,3 +11,10 @@ module "ecr_tmp" {
   env                    = local.env
   ecr_repository_name    = "tmp"
 }
+
+module "ecr_read_and_write_s3" {
+  source                 = "../../modules/ecr"
+  github_repository_name = var.github_repository_name
+  env                    = local.env
+  ecr_repository_name    = "read-and-write-s3"
+}

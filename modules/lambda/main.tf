@@ -22,3 +22,26 @@ resource "aws_cloudwatch_log_group" "lambda_logs" {
   name              = "/aws/lambda/${var.github_repository_name}-${var.env}-${var.function_name}"
   retention_in_days = var.log_retention_days
 }
+
+# S3トリガーのためのLambda許可
+resource "aws_lambda_permission" "s3_trigger" {
+  count         = var.s3_trigger_bucket_name != null ? 1 : 0
+  statement_id  = "AllowExecutionFromS3Bucket"
+  action        = "lambda:InvokeFunction"
+  function_name = aws_lambda_function.this.function_name
+  principal     = "s3.amazonaws.com"
+  source_arn    = var.s3_trigger_bucket_arn
+}
+
+# S3バケット通知設定
+resource "aws_s3_bucket_notification" "s3_trigger" {
+  count  = var.s3_trigger_bucket_name != null ? 1 : 0
+  bucket = var.s3_trigger_bucket_name
+
+  lambda_function {
+    lambda_function_arn = aws_lambda_function.this.arn
+    events              = var.s3_trigger_events
+  }
+
+  depends_on = [aws_lambda_permission.s3_trigger]
+}

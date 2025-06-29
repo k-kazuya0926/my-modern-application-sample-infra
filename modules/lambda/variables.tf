@@ -47,3 +47,21 @@ variable "log_retention_days" {
     error_message = "log_retention_days は有効なCloudWatch Logsの保持期間である必要があります。"
   }
 }
+
+variable "s3_trigger_bucket_name" {
+  description = "S3トリガーのバケット名（オプション）"
+  type        = string
+  default     = null
+}
+
+variable "s3_trigger_bucket_arn" {
+  description = "S3トリガーのバケットARN（オプション）"
+  type        = string
+  default     = null
+}
+
+variable "s3_trigger_events" {
+  description = "S3トリガーのイベント種類"
+  type        = list(string)
+  default     = ["s3:ObjectCreated:*"]
+}
