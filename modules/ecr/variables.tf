@@ -28,3 +28,15 @@ variable "scan_on_push" {
   type        = bool
   default     = true
 }
+
+variable "lifecycle_policy_enabled" {
+  description = "ライフサイクルポリシーを有効にするかどうか"
+  type        = bool
+  default     = true
+}
+
+variable "max_image_count" {
+  description = "保持する最大イメージ数"
+  type        = number
+  default     = 5
+}
