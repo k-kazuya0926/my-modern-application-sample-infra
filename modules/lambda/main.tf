@@ -13,6 +13,10 @@ resource "aws_lambda_function" "this" {
   memory_size = var.memory_size
   timeout     = var.timeout
 
+  environment {
+    variables = var.environment_variables
+  }
+
   depends_on = [
     aws_cloudwatch_log_group.lambda_logs,
   ]

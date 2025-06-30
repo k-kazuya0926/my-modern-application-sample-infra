@@ -35,6 +35,12 @@ variable "timeout" {
   default     = 3
 }
 
+variable "environment_variables" {
+  description = "Lambda関数の環境変数"
+  type        = map(string)
+  default     = {}
+}
+
 variable "log_retention_days" {
   description = "CloudWatch Logsの保持期間（日）"
   type        = number

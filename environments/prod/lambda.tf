@@ -23,6 +23,9 @@ module "lambda_read_and_write_s3" {
   function_name          = "read-and-write-s3"
   execution_role_arn     = module.lambda_execution_role_read_and_write_s3.iam_role_arn
   image_uri              = "${module.ecr_read_and_write_s3.repository_url}:dummy"
+  environment_variables = {
+    OUTPUT_BUCKET = module.s3_write.bucket_name
+  }
 
   # S3トリガー設定
   s3_trigger_bucket_name = module.s3_read.bucket_name
