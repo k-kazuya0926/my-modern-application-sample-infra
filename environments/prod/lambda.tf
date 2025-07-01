@@ -31,3 +31,12 @@ module "lambda_read_and_write_s3" {
   s3_trigger_bucket_name = module.s3_read.bucket_name
   s3_trigger_bucket_arn  = module.s3_read.bucket_arn
 }
+
+module "lambda_register_user" {
+  source                 = "../../modules/lambda"
+  github_repository_name = var.github_repository_name
+  env                    = local.env
+  function_name          = "register-user"
+  execution_role_arn     = module.lambda_execution_role_register_user.iam_role_arn
+  image_uri              = "${module.ecr_register_user.repository_url}:dummy"
+}

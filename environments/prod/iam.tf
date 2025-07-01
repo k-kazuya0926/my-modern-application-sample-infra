@@ -103,6 +103,32 @@ data "aws_iam_policy_document" "lambda_read_and_write_s3" {
 }
 
 
+module "lambda_execution_role_register_user" {
+  source                 = "../../modules/lambda_execution_role"
+  github_repository_name = var.github_repository_name
+  env                    = local.env
+  role_name              = "register-user"
+  policy                 = data.aws_iam_policy_document.lambda_register_user.json
+}
+
+data "aws_iam_policy_document" "lambda_register_user" {
+  statement {
+    effect    = "Allow"
+    actions   = ["logs:CreateLogGroup"]
+    resources = ["arn:aws:logs:${data.aws_region.current.id}:${data.aws_caller_identity.current.account_id}:*"]
+  }
+
+  statement {
+    effect = "Allow"
+    actions = [
+      "logs:CreateLogStream",
+      "logs:PutLogEvents"
+    ]
+    resources = ["arn:aws:logs:${data.aws_region.current.id}:${data.aws_caller_identity.current.account_id}:log-group:/aws/lambda/${var.github_repository_name}-${local.env}-register-user:*"]
+  }
+}
+
+
 module "github_actions_role" {
   source                          = "../../modules/github_actions_role"
   iam_openid_connect_provider_arn = module.github_actions_openid_connect_provider.iam_openid_connect_provider_arn
@@ -137,7 +163,8 @@ data "aws_iam_policy_document" "github_actions" {
     resources = [
       "arn:aws:ecr:${data.aws_region.current.id}:${data.aws_caller_identity.current.account_id}:repository/${var.github_repository_name}-${local.env}-hello-world",
       "arn:aws:ecr:${data.aws_region.current.id}:${data.aws_caller_identity.current.account_id}:repository/${var.github_repository_name}-${local.env}-tmp",
-      "arn:aws:ecr:${data.aws_region.current.id}:${data.aws_caller_identity.current.account_id}:repository/${var.github_repository_name}-${local.env}-read-and-write-s3"
+      "arn:aws:ecr:${data.aws_region.current.id}:${data.aws_caller_identity.current.account_id}:repository/${var.github_repository_name}-${local.env}-read-and-write-s3",
+      "arn:aws:ecr:${data.aws_region.current.id}:${data.aws_caller_identity.current.account_id}:repository/${var.github_repository_name}-${local.env}-register-user"
     ]
   }
 
@@ -157,7 +184,9 @@ data "aws_iam_policy_document" "github_actions" {
       "arn:aws:lambda:${data.aws_region.current.id}:${data.aws_caller_identity.current.account_id}:function:${var.github_repository_name}-${local.env}-tmp",
       "arn:aws:lambda:${data.aws_region.current.id}:${data.aws_caller_identity.current.account_id}:function:${var.github_repository_name}-${local.env}-tmp:*",
       "arn:aws:lambda:${data.aws_region.current.id}:${data.aws_caller_identity.current.account_id}:function:${var.github_repository_name}-${local.env}-read-and-write-s3",
-      "arn:aws:lambda:${data.aws_region.current.id}:${data.aws_caller_identity.current.account_id}:function:${var.github_repository_name}-${local.env}-read-and-write-s3:*"
+      "arn:aws:lambda:${data.aws_region.current.id}:${data.aws_caller_identity.current.account_id}:function:${var.github_repository_name}-${local.env}-read-and-write-s3:*",
+      "arn:aws:lambda:${data.aws_region.current.id}:${data.aws_caller_identity.current.account_id}:function:${var.github_repository_name}-${local.env}-register-user",
+      "arn:aws:lambda:${data.aws_region.current.id}:${data.aws_caller_identity.current.account_id}:function:${var.github_repository_name}-${local.env}-register-user:*"
     ]
   }
 }
