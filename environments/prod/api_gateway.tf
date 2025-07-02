@@ -7,7 +7,7 @@ module "api_gateway_register_user" {
 
   routes = [
     {
-      route_key = "POST /register"
+      route_key = "POST /users"
     }
   ]
 
