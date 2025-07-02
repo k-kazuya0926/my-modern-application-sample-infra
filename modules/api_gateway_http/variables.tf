@@ -37,8 +37,8 @@ variable "cors_configuration" {
   })
   default = {
     allow_credentials = false
-    allow_headers     = ["*"]
-    allow_methods     = ["*"]
+    allow_headers     = ["origin", "content-type", "accept", "authorization"]
+    allow_methods     = ["GET", "POST", "OPTIONS"]
     allow_origins     = ["*"]
     expose_headers    = []
     max_age           = 86400
