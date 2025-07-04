@@ -96,3 +96,11 @@ variable "tags" {
   type        = map(string)
   default     = {}
 }
+
+variable "initial_items" {
+  description = "テーブルに追加する初期アイテム"
+  type = list(object({
+    item = map(any)
+  }))
+  default = []
+}

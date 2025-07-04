@@ -49,3 +49,12 @@ resource "aws_dynamodb_table" "this" {
 
   tags = var.tags
 }
+
+resource "aws_dynamodb_table_item" "initial_items" {
+  count      = length(var.initial_items)
+  table_name = aws_dynamodb_table.this.name
+  hash_key   = aws_dynamodb_table.this.hash_key
+  range_key  = aws_dynamodb_table.this.range_key
+
+  item = jsonencode(var.initial_items[count.index].item)
+}
