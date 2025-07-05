@@ -40,6 +40,8 @@ module "lambda_register_user" {
   execution_role_arn     = module.lambda_execution_role_register_user.iam_role_arn
   image_uri              = "${module.ecr_register_user.repository_url}:dummy"
   environment_variables = {
-    ENV = local.env
+    ENV             = local.env
+    CONTENTS_BUCKET = module.s3_contents.bucket_name
+    FILE_NAME       = "special.txt"
   }
 }
