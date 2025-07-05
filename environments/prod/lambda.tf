@@ -39,4 +39,7 @@ module "lambda_register_user" {
   function_name          = "register-user"
   execution_role_arn     = module.lambda_execution_role_register_user.iam_role_arn
   image_uri              = "${module.ecr_register_user.repository_url}:dummy"
+  environment_variables = {
+    ENV = local.env
+  }
 }
