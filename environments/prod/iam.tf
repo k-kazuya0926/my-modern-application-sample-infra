@@ -188,4 +188,16 @@ data "aws_iam_policy_document" "lambda_register_user" {
     ]
     resources = ["arn:aws:logs:${data.aws_region.current.id}:${data.aws_caller_identity.current.account_id}:log-group:/aws/lambda/${var.github_repository_name}-${local.env}-register-user:*"]
   }
+
+  statement {
+    effect = "Allow"
+    actions = [
+      "dynamodb:PutItem",
+      "dynamodb:UpdateItem"
+    ]
+    resources = [
+      "arn:aws:dynamodb:${data.aws_region.current.id}:${data.aws_caller_identity.current.account_id}:table/${var.github_repository_name}-${local.env}-users",
+      "arn:aws:dynamodb:${data.aws_region.current.id}:${data.aws_caller_identity.current.account_id}:table/${var.github_repository_name}-${local.env}-sequences"
+    ]
+  }
 }

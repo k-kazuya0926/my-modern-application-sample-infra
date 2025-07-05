@@ -33,7 +33,7 @@ module "dynamodb_sequences_table" {
     {
       item = {
         table_name = {
-          S = "users"
+          S = "${var.github_repository_name}-${local.env}-users"
         }
         seq = {
           N = "0"
