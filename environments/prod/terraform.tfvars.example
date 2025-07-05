@@ -1,0 +1,7 @@
+github_owner_name      = "your-github-ownername"
+github_repository_name = "your-repository-name"
+ses_email_addresses = [
+  "example1@example.com",
+  "example2@example.com"
+]
+mail_from = "noreply@example.com"

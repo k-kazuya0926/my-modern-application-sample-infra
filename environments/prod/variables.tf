@@ -12,3 +12,8 @@ variable "ses_email_addresses" {
   type        = list(string)
   description = "SESで認証するメールアドレスのリスト"
 }
+
+variable "mail_from" {
+  type        = string
+  description = "メール送信時のFromアドレス"
+}

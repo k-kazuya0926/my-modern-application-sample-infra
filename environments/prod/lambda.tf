@@ -43,5 +43,6 @@ module "lambda_register_user" {
     ENV             = local.env
     CONTENTS_BUCKET = module.s3_contents.bucket_name
     FILE_NAME       = "special.txt"
+    MAIL_FROM       = var.mail_from
   }
 }
