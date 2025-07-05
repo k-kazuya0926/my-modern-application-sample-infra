@@ -57,4 +57,8 @@ resource "aws_dynamodb_table_item" "initial_items" {
   range_key  = aws_dynamodb_table.this.range_key
 
   item = jsonencode(var.initial_items[count.index].item)
+
+  lifecycle {
+    ignore_changes = [item]
+  }
 }
