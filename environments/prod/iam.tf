@@ -211,4 +211,14 @@ data "aws_iam_policy_document" "lambda_register_user" {
       "arn:aws:s3:::${var.github_repository_name}-${local.env}-contents/*"
     ]
   }
+
+  statement {
+    effect = "Allow"
+    actions = [
+      "ses:SendEmail"
+    ]
+    resources = [
+      "arn:aws:ses:${data.aws_region.current.id}:${data.aws_caller_identity.current.account_id}:identity/*"
+    ]
+  }
 }
