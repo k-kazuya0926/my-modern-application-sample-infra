@@ -18,3 +18,10 @@ module "s3_contents" {
   env                    = local.env
   bucket_name            = "contents"
 }
+
+module "s3_mail_body" {
+  source                 = "../../modules/s3"
+  github_repository_name = var.github_repository_name
+  env                    = local.env
+  bucket_name            = "mail-body"
+}
