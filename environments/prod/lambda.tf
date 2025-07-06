@@ -46,3 +46,12 @@ module "lambda_register_user" {
     MAIL_FROM       = var.mail_from
   }
 }
+
+module "lambda_send_message" {
+  source                 = "../../modules/lambda"
+  github_repository_name = var.github_repository_name
+  env                    = local.env
+  function_name          = "send-message"
+  execution_role_arn     = module.lambda_execution_role_send_message.iam_role_arn
+  image_uri              = "${module.ecr_send_message.repository_url}:dummy"
+}

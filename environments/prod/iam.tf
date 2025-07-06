@@ -34,10 +34,11 @@ data "aws_iam_policy_document" "github_actions" {
       "ecr:UploadLayerPart"
     ]
     resources = [
-      "arn:aws:ecr:${data.aws_region.current.id}:${data.aws_caller_identity.current.account_id}:repository/${var.github_repository_name}-${local.env}-hello-world",
-      "arn:aws:ecr:${data.aws_region.current.id}:${data.aws_caller_identity.current.account_id}:repository/${var.github_repository_name}-${local.env}-tmp",
-      "arn:aws:ecr:${data.aws_region.current.id}:${data.aws_caller_identity.current.account_id}:repository/${var.github_repository_name}-${local.env}-read-and-write-s3",
-      "arn:aws:ecr:${data.aws_region.current.id}:${data.aws_caller_identity.current.account_id}:repository/${var.github_repository_name}-${local.env}-register-user"
+      module.ecr_hello_world.repository_arn,
+      module.ecr_tmp.repository_arn,
+      module.ecr_read_and_write_s3.repository_arn,
+      module.ecr_register_user.repository_arn,
+      module.ecr_send_message.repository_arn
     ]
   }
 
@@ -52,14 +53,16 @@ data "aws_iam_policy_document" "github_actions" {
       "lambda:UpdateAlias"
     ]
     resources = [
-      "arn:aws:lambda:${data.aws_region.current.id}:${data.aws_caller_identity.current.account_id}:function:${var.github_repository_name}-${local.env}-hello-world",
-      "arn:aws:lambda:${data.aws_region.current.id}:${data.aws_caller_identity.current.account_id}:function:${var.github_repository_name}-${local.env}-hello-world:*",
-      "arn:aws:lambda:${data.aws_region.current.id}:${data.aws_caller_identity.current.account_id}:function:${var.github_repository_name}-${local.env}-tmp",
-      "arn:aws:lambda:${data.aws_region.current.id}:${data.aws_caller_identity.current.account_id}:function:${var.github_repository_name}-${local.env}-tmp:*",
-      "arn:aws:lambda:${data.aws_region.current.id}:${data.aws_caller_identity.current.account_id}:function:${var.github_repository_name}-${local.env}-read-and-write-s3",
-      "arn:aws:lambda:${data.aws_region.current.id}:${data.aws_caller_identity.current.account_id}:function:${var.github_repository_name}-${local.env}-read-and-write-s3:*",
-      "arn:aws:lambda:${data.aws_region.current.id}:${data.aws_caller_identity.current.account_id}:function:${var.github_repository_name}-${local.env}-register-user",
-      "arn:aws:lambda:${data.aws_region.current.id}:${data.aws_caller_identity.current.account_id}:function:${var.github_repository_name}-${local.env}-register-user:*"
+      module.lambda_hello_world.function_arn,
+      "${module.lambda_hello_world.function_arn}:*",
+      module.lambda_tmp.function_arn,
+      "${module.lambda_tmp.function_arn}:*",
+      module.lambda_read_and_write_s3.function_arn,
+      "${module.lambda_read_and_write_s3.function_arn}:*",
+      module.lambda_register_user.function_arn,
+      "${module.lambda_register_user.function_arn}:*",
+      module.lambda_send_message.function_arn,
+      "${module.lambda_send_message.function_arn}:*"
     ]
   }
 }
@@ -86,7 +89,7 @@ data "aws_iam_policy_document" "lambda_hello_world" {
       "logs:CreateLogStream",
       "logs:PutLogEvents"
     ]
-    resources = ["arn:aws:logs:${data.aws_region.current.id}:${data.aws_caller_identity.current.account_id}:log-group:/aws/lambda/${var.github_repository_name}-${local.env}-hello-world:*"]
+    resources = ["${module.lambda_hello_world.cloudwatch_log_group_arn}:*"]
   }
 }
 
@@ -112,7 +115,7 @@ data "aws_iam_policy_document" "lambda_tmp" {
       "logs:CreateLogStream",
       "logs:PutLogEvents"
     ]
-    resources = ["arn:aws:logs:${data.aws_region.current.id}:${data.aws_caller_identity.current.account_id}:log-group:/aws/lambda/${var.github_repository_name}-${local.env}-tmp:*"]
+    resources = ["${module.lambda_tmp.cloudwatch_log_group_arn}:*"]
   }
 }
 
@@ -138,7 +141,7 @@ data "aws_iam_policy_document" "lambda_read_and_write_s3" {
       "logs:CreateLogStream",
       "logs:PutLogEvents"
     ]
-    resources = ["arn:aws:logs:${data.aws_region.current.id}:${data.aws_caller_identity.current.account_id}:log-group:/aws/lambda/${var.github_repository_name}-${local.env}-read-and-write-s3:*"]
+    resources = ["${module.lambda_read_and_write_s3.cloudwatch_log_group_arn}:*"]
   }
 
   statement {
@@ -148,8 +151,8 @@ data "aws_iam_policy_document" "lambda_read_and_write_s3" {
       "s3:ListBucket"
     ]
     resources = [
-      "arn:aws:s3:::${var.github_repository_name}-${local.env}-read",
-      "arn:aws:s3:::${var.github_repository_name}-${local.env}-read/*"
+      module.s3_read.bucket_arn,
+      "${module.s3_read.bucket_arn}/*"
     ]
   }
 
@@ -159,7 +162,7 @@ data "aws_iam_policy_document" "lambda_read_and_write_s3" {
       "s3:PutObject",
     ]
     resources = [
-      "arn:aws:s3:::${var.github_repository_name}-${local.env}-write/*"
+      "${module.s3_write.bucket_arn}/*"
     ]
   }
 }
@@ -186,7 +189,7 @@ data "aws_iam_policy_document" "lambda_register_user" {
       "logs:CreateLogStream",
       "logs:PutLogEvents"
     ]
-    resources = ["arn:aws:logs:${data.aws_region.current.id}:${data.aws_caller_identity.current.account_id}:log-group:/aws/lambda/${var.github_repository_name}-${local.env}-register-user:*"]
+    resources = ["${module.lambda_register_user.cloudwatch_log_group_arn}:*"]
   }
 
   statement {
@@ -207,8 +210,8 @@ data "aws_iam_policy_document" "lambda_register_user" {
       "s3:GetObject"
     ]
     resources = [
-      "arn:aws:s3:::${var.github_repository_name}-${local.env}-contents",
-      "arn:aws:s3:::${var.github_repository_name}-${local.env}-contents/*"
+      module.s3_contents.bucket_arn,
+      "${module.s3_contents.bucket_arn}/*"
     ]
   }
 
@@ -245,7 +248,7 @@ data "aws_iam_policy_document" "lambda_send_message" {
       "logs:CreateLogStream",
       "logs:PutLogEvents"
     ]
-    resources = ["arn:aws:logs:${data.aws_region.current.id}:${data.aws_caller_identity.current.account_id}:log-group:/aws/lambda/${var.github_repository_name}-${local.env}-send-message:*"]
+    resources = ["${module.lambda_send_message.cloudwatch_log_group_arn}:*"]
   }
 
   statement {
