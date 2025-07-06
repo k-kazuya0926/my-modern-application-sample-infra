@@ -222,3 +222,39 @@ data "aws_iam_policy_document" "lambda_register_user" {
     ]
   }
 }
+
+
+module "lambda_execution_role_send_message" {
+  source                 = "../../modules/lambda_execution_role"
+  github_repository_name = var.github_repository_name
+  env                    = local.env
+  role_name              = "send-message"
+  policy                 = data.aws_iam_policy_document.lambda_send_message.json
+}
+
+data "aws_iam_policy_document" "lambda_send_message" {
+  statement {
+    effect    = "Allow"
+    actions   = ["logs:CreateLogGroup"]
+    resources = ["arn:aws:logs:${data.aws_region.current.id}:${data.aws_caller_identity.current.account_id}:*"]
+  }
+
+  statement {
+    effect = "Allow"
+    actions = [
+      "logs:CreateLogStream",
+      "logs:PutLogEvents"
+    ]
+    resources = ["arn:aws:logs:${data.aws_region.current.id}:${data.aws_caller_identity.current.account_id}:log-group:/aws/lambda/${var.github_repository_name}-${local.env}-send-message:*"]
+  }
+
+  statement {
+    effect = "Allow"
+    actions = [
+      "sqs:SendMessage"
+    ]
+    resources = [
+      module.sqs_send_mail.queue_arn
+    ]
+  }
+}
