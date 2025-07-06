@@ -50,7 +50,7 @@ module "dynamodb_mail_addresses_table" {
 
   github_repository_name      = var.github_repository_name
   env                         = local.env
-  table_name                  = "mail_addresses"
+  table_name                  = "mail-addresses"
   hash_key                    = "email"
   deletion_protection_enabled = false # サンプルであるため無効に設定
 
