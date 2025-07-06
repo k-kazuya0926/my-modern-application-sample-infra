@@ -55,10 +55,10 @@ variable "global_secondary_indexes" {
   type = list(object({
     name            = string
     hash_key        = string
-    range_key       = string
+    range_key       = optional(string)
     projection_type = string
-    read_capacity   = number
-    write_capacity  = number
+    read_capacity   = optional(number)
+    write_capacity  = optional(number)
   }))
   default = []
 }
