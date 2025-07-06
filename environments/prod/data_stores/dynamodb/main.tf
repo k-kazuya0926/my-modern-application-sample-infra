@@ -1,5 +1,5 @@
 module "dynamodb_users_table" {
-  source = "../../modules/dynamodb"
+  source = "../../../../modules/dynamodb"
 
   github_repository_name = var.github_repository_name
   env                    = local.env
@@ -15,7 +15,7 @@ module "dynamodb_users_table" {
 }
 
 module "dynamodb_sequences_table" {
-  source = "../../modules/dynamodb"
+  source = "../../../../modules/dynamodb"
 
   github_repository_name = var.github_repository_name
   env                    = local.env

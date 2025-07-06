@@ -196,8 +196,8 @@ data "aws_iam_policy_document" "lambda_register_user" {
       "dynamodb:UpdateItem"
     ]
     resources = [
-      "arn:aws:dynamodb:${data.aws_region.current.id}:${data.aws_caller_identity.current.account_id}:table/${var.github_repository_name}-${local.env}-users",
-      "arn:aws:dynamodb:${data.aws_region.current.id}:${data.aws_caller_identity.current.account_id}:table/${var.github_repository_name}-${local.env}-sequences"
+      data.terraform_remote_state.dynamodb.outputs.users_table_arn,
+      data.terraform_remote_state.dynamodb.outputs.sequences_table_arn
     ]
   }
 
