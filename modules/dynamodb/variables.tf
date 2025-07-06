@@ -104,3 +104,9 @@ variable "initial_items" {
   }))
   default = []
 }
+
+variable "deletion_protection_enabled" {
+  description = "削除保護を有効にするか"
+  type        = bool
+  default     = true
+}

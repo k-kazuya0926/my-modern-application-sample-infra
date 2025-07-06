@@ -1,10 +1,11 @@
 module "dynamodb_users_table" {
   source = "../../../../modules/dynamodb"
 
-  github_repository_name = var.github_repository_name
-  env                    = local.env
-  table_name             = "users"
-  hash_key               = "id"
+  github_repository_name      = var.github_repository_name
+  env                         = local.env
+  table_name                  = "users"
+  hash_key                    = "id"
+  deletion_protection_enabled = false # サンプルであるため無効に設定
 
   attributes = [
     {
@@ -17,10 +18,11 @@ module "dynamodb_users_table" {
 module "dynamodb_sequences_table" {
   source = "../../../../modules/dynamodb"
 
-  github_repository_name = var.github_repository_name
-  env                    = local.env
-  table_name             = "sequences"
-  hash_key               = "table_name"
+  github_repository_name      = var.github_repository_name
+  env                         = local.env
+  table_name                  = "sequences"
+  hash_key                    = "table_name"
+  deletion_protection_enabled = false # サンプルであるため無効に設定
 
   attributes = [
     {
