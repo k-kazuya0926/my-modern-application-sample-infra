@@ -32,3 +32,10 @@ module "ecr_send_message" {
   env                    = local.env
   ecr_repository_name    = "send-message"
 }
+
+module "ecr_read_message_and_send_mail" {
+  source                 = "../../modules/ecr"
+  github_repository_name = var.github_repository_name
+  env                    = local.env
+  ecr_repository_name    = "read-message-and-send-mail"
+}
