@@ -1,0 +1,64 @@
+---
+description:
+globs:
+alwaysApply: true
+---
+
+# プロジェクトルール
+
+## プロジェクト概要
+このプロジェクトは、モダンなアプリケーションのためのAWSインフラストラクチャをTerraformで管理するプロジェクトです。
+
+## アーキテクチャ構成
+- **Lambda関数**: サーバーレス処理
+- **API Gateway**: RESTful APIエンドポイント（ユーザー登録API）
+- **S3**: オブジェクトストレージ（読み取り用、書き込み用、コンテンツ用、メール本文用）
+- **DynamoDB**: NoSQLデータベース
+- **SES**: メール送信サービス
+- **SQS**: メッセージキューサービス
+- **ECR**: Dockerコンテナレジストリ
+- **IAM**: アクセス権限管理
+- **GitHub Actions**: CI/CDパイプライン（OIDC連携）
+
+## コーディング規約
+
+### Terraform
+- Terraformバージョン: 1.12.2
+- AWSプロバイダーバージョン: 6.0.0
+- リージョン: ap-northeast-1
+- モジュール化を推進し、再利用可能なコンポーネントを作成する
+- 環境ごとに設定を分離する
+- リソース名には環境名を含める
+- 変数の型と説明を必ず定義する
+
+### ファイル構成
+- `environments/`: 環境別の設定ファイル
+- `modules/`: 再利用可能なTerraformモジュール
+- バックエンド設定はS3を使用
+- tfstateファイルは環境ごとに分離
+
+### 命名規則
+- Lambda関数名: ハイフン区切り（例: hello-world, register-user）
+- S3バケット名: 用途を明確にする（例: read, write, contents, mail-body）
+- モジュール名: リソースタイプを含める（例: lambda_hello_world, s3_read）
+
+### セキュリティ
+- IAM権限は最小権限の原則に従う
+- Lambda実行ロールは関数ごとに分離
+- GitHub ActionsのOIDC連携を使用してセキュアなCI/CDを実現
+
+### 環境変数管理
+- 機密情報は環境変数で管理
+- terraform.tfvars.exampleでサンプル値を提供
+- SESメールアドレスなどの設定可能な値は変数化
+
+## 開発ガイドライン
+- 新しいリソースを追加する際は、対応するモジュールを作成または既存モジュールを活用する
+- Lambda関数には対応するECRリポジトリを作成する
+- S3トリガーが必要な場合は、Lambda設定で適切に構成する
+- API Gatewayの新しいエンドポイントは、対応するLambda関数と連携させる
+
+## デプロイメント
+- GitHub Actionsを使用した自動デプロイメント
+- terraform plan → terraform apply の流れでインフラを更新
+- 環境ごとにワークフローを分離
