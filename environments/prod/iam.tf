@@ -254,7 +254,16 @@ data "aws_iam_policy_document" "lambda_send_message" {
   statement {
     effect = "Allow"
     actions = [
-      "dynamodb:Query",
+      "dynamodb:Query"
+    ]
+    resources = [
+      "${data.terraform_remote_state.dynamodb.outputs.mail_addresses_table_arn}/index/has_error-index"
+    ]
+  }
+
+  statement {
+    effect = "Allow"
+    actions = [
       "dynamodb:UpdateItem"
     ]
     resources = [
@@ -265,7 +274,8 @@ data "aws_iam_policy_document" "lambda_send_message" {
   statement {
     effect = "Allow"
     actions = [
-      "sqs:SendMessage"
+      "sqs:SendMessage",
+      "sqs:GetQueueUrl"
     ]
     resources = [
       module.sqs_send_mail.queue_arn
