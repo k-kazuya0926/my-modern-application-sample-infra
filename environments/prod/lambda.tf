@@ -53,6 +53,9 @@ module "lambda_send_message" {
   function_name          = "send-message"
   execution_role_arn     = module.lambda_execution_role_send_message.iam_role_arn
   image_uri              = "${module.ecr_send_message.repository_url}:dummy"
+  environment_variables = {
+    ENV = local.env
+  }
 
   s3_trigger_bucket_name = module.s3_mail_body.bucket_name
   s3_trigger_bucket_arn  = module.s3_mail_body.bucket_arn

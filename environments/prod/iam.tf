@@ -254,6 +254,17 @@ data "aws_iam_policy_document" "lambda_send_message" {
   statement {
     effect = "Allow"
     actions = [
+      "dynamodb:Query",
+      "dynamodb:UpdateItem"
+    ]
+    resources = [
+      data.terraform_remote_state.dynamodb.outputs.mail_addresses_table_arn
+    ]
+  }
+
+  statement {
+    effect = "Allow"
+    actions = [
       "sqs:SendMessage"
     ]
     resources = [
