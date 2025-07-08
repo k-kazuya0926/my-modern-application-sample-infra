@@ -68,7 +68,8 @@ module "lambda_read_message_and_send_mail" {
   execution_role_arn     = module.lambda_execution_role_read_message_and_send_mail.iam_role_arn
   image_uri              = "${module.ecr_read_message_and_send_mail.repository_url}:dummy"
   environment_variables = {
-    ENV = local.env
+    ENV       = local.env
+    MAIL_FROM = var.mail_from
   }
   sqs_trigger_queue_arn = module.sqs_send_mail.queue_arn
 }

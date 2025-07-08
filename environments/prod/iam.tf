@@ -326,10 +326,30 @@ data "aws_iam_policy_document" "lambda_read_message_and_send_mail" {
   statement {
     effect = "Allow"
     actions = [
+      "s3:GetObject"
+    ]
+    resources = [
+      "${module.s3_mail_body.bucket_arn}/*"
+    ]
+  }
+
+  statement {
+    effect = "Allow"
+    actions = [
       "dynamodb:UpdateItem"
     ]
     resources = [
       data.terraform_remote_state.dynamodb.outputs.mail_addresses_table_arn
+    ]
+  }
+
+  statement {
+    effect = "Allow"
+    actions = [
+      "ses:SendEmail"
+    ]
+    resources = [
+      "arn:aws:ses:${data.aws_region.current.id}:${data.aws_caller_identity.current.account_id}:identity/*"
     ]
   }
 }
