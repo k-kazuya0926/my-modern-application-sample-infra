@@ -39,3 +39,10 @@ module "ecr_read_message_and_send_mail" {
   env                    = local.env
   ecr_repository_name    = "read-message-and-send-mail"
 }
+
+module "ecr_receive_bounce_mail" {
+  source                 = "../../modules/ecr"
+  github_repository_name = var.github_repository_name
+  env                    = local.env
+  ecr_repository_name    = "receive-bounce-mail"
+}
