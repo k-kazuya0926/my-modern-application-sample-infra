@@ -73,3 +73,31 @@ module "lambda_read_message_and_send_mail" {
   }
   sqs_trigger_queue_arn = module.sqs_send_mail.queue_arn
 }
+
+module "lambda_receive_bounce_mail" {
+  source                 = "../../modules/lambda"
+  github_repository_name = var.github_repository_name
+  env                    = local.env
+  function_name          = "receive-bounce-mail"
+  execution_role_arn     = module.lambda_execution_role_receive_bounce_mail.iam_role_arn
+  image_uri              = "${module.ecr_receive_bounce_mail.repository_url}:dummy"
+  environment_variables = {
+    ENV        = local.env
+    MAIL_TABLE = data.terraform_remote_state.dynamodb.outputs.mail_addresses_table_name
+  }
+}
+
+# SNSトピックのLambda関数サブスクリプション
+resource "aws_lambda_permission" "allow_sns_invoke_receive_bounce_mail" {
+  statement_id  = "AllowExecutionFromSNS"
+  action        = "lambda:InvokeFunction"
+  function_name = module.lambda_receive_bounce_mail.function_name
+  principal     = "sns.amazonaws.com"
+  source_arn    = module.sns_bounce_notifications.topic_arn
+}
+
+resource "aws_sns_topic_subscription" "receive_bounce_mail" {
+  topic_arn = module.sns_bounce_notifications.topic_arn
+  protocol  = "lambda"
+  endpoint  = module.lambda_receive_bounce_mail.function_arn
+}

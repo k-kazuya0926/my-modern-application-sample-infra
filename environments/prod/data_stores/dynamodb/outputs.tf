@@ -12,3 +12,8 @@ output "mail_addresses_table_arn" {
   description = "mail_addressesテーブルのARN"
   value       = module.dynamodb_mail_addresses_table.table_arn
 }
+
+output "mail_addresses_table_name" {
+  description = "mail_addressesテーブル名"
+  value       = module.dynamodb_mail_addresses_table.table_name
+}
