@@ -56,7 +56,19 @@ module "lambda_send_message" {
   environment_variables = {
     ENV = local.env
   }
-
   s3_trigger_bucket_name = module.s3_mail_body.bucket_name
   s3_trigger_bucket_arn  = module.s3_mail_body.bucket_arn
+}
+
+module "lambda_read_message_and_send_mail" {
+  source                 = "../../modules/lambda"
+  github_repository_name = var.github_repository_name
+  env                    = local.env
+  function_name          = "read-message-and-send-mail"
+  execution_role_arn     = module.lambda_execution_role_read_message_and_send_mail.iam_role_arn
+  image_uri              = "${module.ecr_read_message_and_send_mail.repository_url}:dummy"
+  environment_variables = {
+    ENV = local.env
+  }
+  sqs_trigger_queue_arn = module.sqs_send_mail.queue_arn
 }

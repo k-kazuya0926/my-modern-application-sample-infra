@@ -71,3 +71,15 @@ variable "s3_trigger_events" {
   type        = list(string)
   default     = ["s3:ObjectCreated:*"]
 }
+
+variable "sqs_trigger_queue_arn" {
+  description = "SQSトリガーのキューARN（オプション）"
+  type        = string
+  default     = null
+}
+
+variable "sqs_trigger_batch_size" {
+  description = "SQSトリガーのバッチサイズ"
+  type        = number
+  default     = 10
+}

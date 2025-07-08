@@ -63,7 +63,9 @@ data "aws_iam_policy_document" "github_actions" {
       module.lambda_register_user.function_arn,
       "${module.lambda_register_user.function_arn}:*",
       module.lambda_send_message.function_arn,
-      "${module.lambda_send_message.function_arn}:*"
+      "${module.lambda_send_message.function_arn}:*",
+      module.lambda_read_message_and_send_mail.function_arn,
+      "${module.lambda_read_message_and_send_mail.function_arn}:*"
     ]
   }
 }
@@ -280,6 +282,54 @@ data "aws_iam_policy_document" "lambda_send_message" {
     ]
     resources = [
       module.sqs_send_mail.queue_arn
+    ]
+  }
+}
+
+
+module "lambda_execution_role_read_message_and_send_mail" {
+  source                 = "../../modules/lambda_execution_role"
+  github_repository_name = var.github_repository_name
+  env                    = local.env
+  role_name              = "read-message-and-send-mail"
+  policy                 = data.aws_iam_policy_document.lambda_read_message_and_send_mail.json
+}
+
+data "aws_iam_policy_document" "lambda_read_message_and_send_mail" {
+  statement {
+    effect    = "Allow"
+    actions   = ["logs:CreateLogGroup"]
+    resources = ["arn:aws:logs:${data.aws_region.current.id}:${data.aws_caller_identity.current.account_id}:*"]
+  }
+
+  statement {
+    effect = "Allow"
+    actions = [
+      "logs:CreateLogStream",
+      "logs:PutLogEvents"
+    ]
+    resources = ["${module.lambda_read_message_and_send_mail.cloudwatch_log_group_arn}:*"]
+  }
+
+  statement {
+    effect = "Allow"
+    actions = [
+      "sqs:ReceiveMessage",
+      "sqs:DeleteMessage",
+      "sqs:GetQueueAttributes"
+    ]
+    resources = [
+      module.sqs_send_mail.queue_arn
+    ]
+  }
+
+  statement {
+    effect = "Allow"
+    actions = [
+      "dynamodb:UpdateItem"
+    ]
+    resources = [
+      data.terraform_remote_state.dynamodb.outputs.mail_addresses_table_arn
     ]
   }
 }
