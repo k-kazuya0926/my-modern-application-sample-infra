@@ -17,6 +17,7 @@ https://github.com/k-kazuya0926/my-modern-application-sample
 - **SES**: メール送信サービス
 - **SQS**: メッセージキューサービス
 - **SNS**: 通知サービス
+- **X-Ray**: 分散トレーシング
 - **ECR**: Dockerコンテナレジストリ
 - **IAM**: アクセス権限管理
 
@@ -43,6 +44,9 @@ https://github.com/k-kazuya0926/my-modern-application-sample
 ```
 environments/          # 環境別設定
 ├── prod/              # 本番環境
+│   ├── data_stores/   # データストア設定
+│   │   └── dynamodb/  # DynamoDB設定
+│   └── ...
 └── backend.hcl.example # バックエンド設定例
 
 modules/               # 再利用可能モジュール
@@ -58,3 +62,4 @@ modules/               # 再利用可能モジュール
 - 実践Terraform　AWSにおけるシステム設計とベストプラクティス
 - 詳解 Terraform 第3版 ―Infrastructure as Codeを実現する
 - GitHub CI/CD実践ガイド――持続可能なソフトウェア開発を支えるGitHub Actionsの設計と運用
+- AWS Lambda実践ガイド 第2版
