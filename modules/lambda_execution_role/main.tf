@@ -26,3 +26,10 @@ resource "aws_iam_role_policy_attachment" "this" {
   role       = aws_iam_role.this.name
   policy_arn = aws_iam_policy.this.arn
 }
+
+# X-Rayトレーシング用のポリシーアタッチメント
+resource "aws_iam_role_policy_attachment" "xray_write_only" {
+  count      = var.enable_xray ? 1 : 0
+  role       = aws_iam_role.this.name
+  policy_arn = "arn:aws:iam::aws:policy/AWSXRayDaemonWriteAccess"
+}

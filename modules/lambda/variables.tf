@@ -83,3 +83,9 @@ variable "sqs_trigger_batch_size" {
   type        = number
   default     = 10
 }
+
+variable "enable_tracing" {
+  description = "X-Rayトレーシングを有効にするかどうか"
+  type        = bool
+  default     = false
+}

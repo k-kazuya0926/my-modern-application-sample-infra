@@ -17,6 +17,10 @@ resource "aws_lambda_function" "this" {
     variables = var.environment_variables
   }
 
+  tracing_config {
+    mode = var.enable_tracing ? "Active" : "PassThrough"
+  }
+
   depends_on = [
     aws_cloudwatch_log_group.lambda_logs,
   ]

@@ -17,3 +17,9 @@ variable "policy" {
   description = "IAMポリシー"
   type        = string
 }
+
+variable "enable_xray" {
+  description = "X-Rayトレーシングを有効にするかどうか"
+  type        = bool
+  default     = false
+}

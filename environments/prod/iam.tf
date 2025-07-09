@@ -239,6 +239,7 @@ module "lambda_execution_role_send_message" {
   env                    = local.env
   role_name              = "send-message"
   policy                 = data.aws_iam_policy_document.lambda_send_message.json
+  enable_xray            = true
 }
 
 data "aws_iam_policy_document" "lambda_send_message" {
@@ -296,6 +297,7 @@ module "lambda_execution_role_read_message_and_send_mail" {
   env                    = local.env
   role_name              = "read-message-and-send-mail"
   policy                 = data.aws_iam_policy_document.lambda_read_message_and_send_mail.json
+  enable_xray            = true
 }
 
 data "aws_iam_policy_document" "lambda_read_message_and_send_mail" {
@@ -363,6 +365,7 @@ module "lambda_execution_role_receive_bounce_mail" {
   env                    = local.env
   role_name              = "receive-bounce-mail"
   policy                 = data.aws_iam_policy_document.lambda_receive_bounce_mail.json
+  enable_xray            = true
 }
 
 data "aws_iam_policy_document" "lambda_receive_bounce_mail" {

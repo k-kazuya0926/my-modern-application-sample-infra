@@ -58,6 +58,7 @@ module "lambda_send_message" {
   }
   s3_trigger_bucket_name = module.s3_mail_body.bucket_name
   s3_trigger_bucket_arn  = module.s3_mail_body.bucket_arn
+  enable_tracing         = true
 }
 
 module "lambda_read_message_and_send_mail" {
@@ -72,6 +73,7 @@ module "lambda_read_message_and_send_mail" {
     MAIL_FROM = var.mail_from
   }
   sqs_trigger_queue_arn = module.sqs_send_mail.queue_arn
+  enable_tracing        = true
 }
 
 module "lambda_receive_bounce_mail" {
@@ -85,6 +87,5 @@ module "lambda_receive_bounce_mail" {
     ENV        = local.env
     MAIL_TABLE = data.terraform_remote_state.dynamodb.outputs.mail_addresses_table_name
   }
+  enable_tracing = true
 }
-
-
