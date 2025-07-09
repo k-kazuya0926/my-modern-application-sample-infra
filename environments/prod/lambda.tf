@@ -87,17 +87,4 @@ module "lambda_receive_bounce_mail" {
   }
 }
 
-# SNSトピックのLambda関数サブスクリプション
-resource "aws_lambda_permission" "allow_sns_invoke_receive_bounce_mail" {
-  statement_id  = "AllowExecutionFromSNS"
-  action        = "lambda:InvokeFunction"
-  function_name = module.lambda_receive_bounce_mail.function_name
-  principal     = "sns.amazonaws.com"
-  source_arn    = module.sns_bounce_notifications.topic_arn
-}
 
-resource "aws_sns_topic_subscription" "receive_bounce_mail" {
-  topic_arn = module.sns_bounce_notifications.topic_arn
-  protocol  = "lambda"
-  endpoint  = module.lambda_receive_bounce_mail.function_arn
-}

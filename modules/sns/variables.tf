@@ -142,3 +142,12 @@ variable "subscriptions" {
   }))
   default = []
 }
+
+variable "lambda_subscriptions" {
+  description = "Lambda関数のSNSトピック購読設定"
+  type = list(object({
+    function_name = string
+    function_arn  = string
+  }))
+  default = []
+}

@@ -32,3 +32,18 @@ output "subscription_ids" {
   description = "SNSトピック購読のIDリスト"
   value       = aws_sns_topic_subscription.this[*].id
 }
+
+output "lambda_subscription_arns" {
+  description = "Lambda関数のSNSトピック購読のARNリスト"
+  value       = aws_sns_topic_subscription.lambda[*].arn
+}
+
+output "lambda_subscription_ids" {
+  description = "Lambda関数のSNSトピック購読のIDリスト"
+  value       = aws_sns_topic_subscription.lambda[*].id
+}
+
+output "lambda_permission_ids" {
+  description = "Lambda関数のSNS呼び出し権限のIDリスト"
+  value       = aws_lambda_permission.allow_sns_invoke[*].id
+}

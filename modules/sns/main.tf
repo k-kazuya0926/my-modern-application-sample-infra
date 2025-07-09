@@ -36,3 +36,21 @@ resource "aws_sns_topic_subscription" "this" {
   delivery_policy                 = var.subscriptions[count.index].delivery_policy
   redrive_policy                  = var.subscriptions[count.index].redrive_policy
 }
+
+# Lambda関数のSNS呼び出し権限
+resource "aws_lambda_permission" "allow_sns_invoke" {
+  count         = length(var.lambda_subscriptions)
+  statement_id  = "AllowExecutionFromSNS-${count.index}"
+  action        = "lambda:InvokeFunction"
+  function_name = var.lambda_subscriptions[count.index].function_name
+  principal     = "sns.amazonaws.com"
+  source_arn    = aws_sns_topic.this.arn
+}
+
+# Lambda関数のSNSトピック購読
+resource "aws_sns_topic_subscription" "lambda" {
+  count     = length(var.lambda_subscriptions)
+  topic_arn = aws_sns_topic.this.arn
+  protocol  = "lambda"
+  endpoint  = var.lambda_subscriptions[count.index].function_arn
+}
