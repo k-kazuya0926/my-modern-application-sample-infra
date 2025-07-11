@@ -10,7 +10,7 @@ module "appconfig_feature_flags" {
   application_description = "Feature flags for the application"
 
   # Configuration Profile設定
-  configuration_profile_name        = "feature-flags-config"
+  configuration_profile_name        = "feature-flags"
   configuration_profile_description = "Feature flags configuration profile"
   configuration_profile_type        = "AWS.AppConfig.FeatureFlags"
 

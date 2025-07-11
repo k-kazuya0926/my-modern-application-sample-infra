@@ -66,6 +66,10 @@ resource "aws_appconfig_hosted_configuration_version" "this" {
   content_type             = var.hosted_configuration_content_type
   content                  = var.hosted_configuration_content
   description              = var.hosted_configuration_description
+
+  lifecycle {
+    ignore_changes = [content]
+  }
 }
 
 # AppConfig Deployment
