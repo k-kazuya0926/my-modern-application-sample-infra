@@ -69,7 +69,9 @@ data "aws_iam_policy_document" "github_actions" {
       module.lambda_read_message_and_send_mail.function_arn,
       "${module.lambda_read_message_and_send_mail.function_arn}:*",
       module.lambda_receive_bounce_mail.function_arn,
-      "${module.lambda_receive_bounce_mail.function_arn}:*"
+      "${module.lambda_receive_bounce_mail.function_arn}:*",
+      module.lambda_feature_flags.function_arn,
+      "${module.lambda_feature_flags.function_arn}:*"
     ]
   }
 }
@@ -360,6 +362,7 @@ data "aws_iam_policy_document" "lambda_read_message_and_send_mail" {
   }
 }
 
+
 module "lambda_execution_role_receive_bounce_mail" {
   source                 = "../../modules/lambda_execution_role"
   github_repository_name = var.github_repository_name
@@ -393,5 +396,31 @@ data "aws_iam_policy_document" "lambda_receive_bounce_mail" {
     resources = [
       data.terraform_remote_state.dynamodb.outputs.mail_addresses_table_arn
     ]
+  }
+}
+
+
+module "lambda_execution_role_feature_flags" {
+  source                 = "../../modules/lambda_execution_role"
+  github_repository_name = var.github_repository_name
+  env                    = local.env
+  role_name              = "feature-flags"
+  policy                 = data.aws_iam_policy_document.lambda_feature_flags.json
+}
+
+data "aws_iam_policy_document" "lambda_feature_flags" {
+  statement {
+    effect    = "Allow"
+    actions   = ["logs:CreateLogGroup"]
+    resources = ["arn:aws:logs:${data.aws_region.current.id}:${data.aws_caller_identity.current.account_id}:*"]
+  }
+
+  statement {
+    effect = "Allow"
+    actions = [
+      "logs:CreateLogStream",
+      "logs:PutLogEvents"
+    ]
+    resources = ["${module.lambda_feature_flags.cloudwatch_log_group_arn}:*"]
   }
 }

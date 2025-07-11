@@ -89,3 +89,12 @@ module "lambda_receive_bounce_mail" {
   }
   enable_tracing = true
 }
+
+module "lambda_feature_flags" {
+  source                 = "../../modules/lambda"
+  github_repository_name = var.github_repository_name
+  env                    = local.env
+  function_name          = "feature-flags"
+  execution_role_arn     = module.lambda_execution_role_feature_flags.iam_role_arn
+  image_uri              = "${module.ecr_feature_flags.repository_url}:dummy"
+}
