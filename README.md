@@ -20,6 +20,7 @@ https://github.com/k-kazuya0926/my-modern-application-sample
 - **X-Ray**: 分散トレーシング
 - **ECR**: Dockerコンテナレジストリ
 - **IAM**: アクセス権限管理
+- **AppConfig**: フィーチャーフラグ管理（アプリケーション設定の動的変更）
 
 ### CI/CD
 - **GitHub Actions**: OIDC連携によるセキュアなデプロイメント
@@ -39,7 +40,7 @@ https://github.com/k-kazuya0926/my-modern-application-sample
 - サーバーレスアーキテクチャによる自動スケーリング
 - マネージドサービスの活用による運用負荷軽減
 
-## プロジェクト構成
+## ディレクトリ構成
 
 ```
 environments/          # 環境別設定
@@ -63,3 +64,4 @@ modules/               # 再利用可能モジュール
 - 詳解 Terraform 第3版 ―Infrastructure as Codeを実現する
 - GitHub CI/CD実践ガイド――持続可能なソフトウェア開発を支えるGitHub Actionsの設計と運用
 - AWS Lambda実践ガイド 第2版
+- AWSで実現するモダンアプリケーション入門 〜サーバーレス、コンテナ、マイクロサービスで何ができるのか
