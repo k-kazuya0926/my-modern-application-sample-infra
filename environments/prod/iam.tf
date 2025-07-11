@@ -423,4 +423,17 @@ data "aws_iam_policy_document" "lambda_feature_flags" {
     ]
     resources = ["${module.lambda_feature_flags.cloudwatch_log_group_arn}:*"]
   }
+
+  statement {
+    effect = "Allow"
+    actions = [
+      "appconfig:StartConfigurationSession",
+      "appconfig:GetLatestConfiguration"
+    ]
+    resources = [
+      module.appconfig_feature_flags.application_arn,
+      module.appconfig_feature_flags.environment_arn,
+      module.appconfig_feature_flags.configuration_profile_arn
+    ]
+  }
 }

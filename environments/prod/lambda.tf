@@ -97,4 +97,9 @@ module "lambda_feature_flags" {
   function_name          = "feature-flags"
   execution_role_arn     = module.lambda_execution_role_feature_flags.iam_role_arn
   image_uri              = "${module.ecr_feature_flags.repository_url}:dummy"
+  environment_variables = {
+    APPCONFIG_APPLICATION_ID           = module.appconfig_feature_flags.application_id
+    APPCONFIG_ENVIRONMENT_ID           = module.appconfig_feature_flags.environment_id
+    APPCONFIG_CONFIGURATION_PROFILE_ID = module.appconfig_feature_flags.configuration_profile_id
+  }
 }
