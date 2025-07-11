@@ -46,3 +46,10 @@ module "ecr_receive_bounce_mail" {
   env                    = local.env
   ecr_repository_name    = "receive-bounce-mail"
 }
+
+module "ecr_feature_flags" {
+  source                 = "../../modules/ecr"
+  github_repository_name = var.github_repository_name
+  env                    = local.env
+  ecr_repository_name    = "feature-flags"
+}
