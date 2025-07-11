@@ -431,9 +431,7 @@ data "aws_iam_policy_document" "lambda_feature_flags" {
       "appconfig:GetLatestConfiguration"
     ]
     resources = [
-      module.appconfig_feature_flags.application_arn,
-      module.appconfig_feature_flags.environment_arn,
-      module.appconfig_feature_flags.configuration_profile_arn
+      "arn:aws:appconfig:${data.aws_region.current.id}:${data.aws_caller_identity.current.account_id}:application/${module.appconfig_feature_flags.application_id}/environment/${module.appconfig_feature_flags.environment_id}/configuration/${module.appconfig_feature_flags.configuration_profile_id}"
     ]
   }
 }
