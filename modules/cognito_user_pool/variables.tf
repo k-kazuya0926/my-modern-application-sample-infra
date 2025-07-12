@@ -190,7 +190,7 @@ variable "user_pool_clients" {
     enable_propagate_additional_user_context_data = optional(bool, false)
     access_token_validity                         = optional(number, 60)
     id_token_validity                             = optional(number, 60)
-    refresh_token_validity                        = optional(number, 30)
+    refresh_token_validity                        = optional(number, 5)
     token_validity_units = optional(object({
       access_token  = optional(string, "minutes")
       id_token      = optional(string, "minutes")
