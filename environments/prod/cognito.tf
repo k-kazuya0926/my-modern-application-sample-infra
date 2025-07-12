@@ -71,10 +71,4 @@ module "cognito_user_pool" {
       }
     }
   ]
-
-  tags = {
-    Name        = "${var.github_repository_name}-${local.env}-user-pool"
-    Environment = local.env
-    Project     = var.github_repository_name
-  }
 }
