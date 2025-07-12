@@ -70,3 +70,23 @@ output "user_pool_clients" {
     }
   }
 }
+
+# マネージドログインページのURL
+output "hosted_ui_url" {
+  description = "Cognitoマネージドログインページ（Hosted UI）のベースURL"
+  value       = var.user_pool_domain != null ? "https://${aws_cognito_user_pool_domain.this[0].domain}.auth.${data.aws_region.current.id}.amazoncognito.com" : null
+}
+
+# 現在のAWSリージョンを取得するためのデータソース
+data "aws_region" "current" {}
+
+# 各クライアント用のログインURL
+output "login_urls" {
+  description = "各クライアント用のログインURL"
+  value = var.user_pool_domain != null ? {
+    for i, client in aws_cognito_user_pool_client.this : client.name => {
+      login_url  = "https://${aws_cognito_user_pool_domain.this[0].domain}.auth.${data.aws_region.current.id}.amazoncognito.com/login?client_id=${client.id}&response_type=code&scope=${join("+", client.allowed_oauth_scopes)}&redirect_uri=${length(client.callback_urls) > 0 ? tolist(client.callback_urls)[0] : ""}"
+      logout_url = "https://${aws_cognito_user_pool_domain.this[0].domain}.auth.${data.aws_region.current.id}.amazoncognito.com/logout?client_id=${client.id}&logout_uri=${length(client.logout_urls) > 0 ? tolist(client.logout_urls)[0] : ""}"
+    }
+  } : {}
+}

@@ -24,6 +24,27 @@ output "cognito_user_pool_endpoint" {
   value       = module.cognito_user_pool.user_pool_endpoint
 }
 
+# Cognito Hosted UI 出力値
+output "cognito_hosted_ui_url" {
+  description = "Cognito Hosted UI Base URL"
+  value       = module.cognito_user_pool.hosted_ui_url
+}
+
+output "cognito_user_pool_domain" {
+  description = "Cognito User Pool Domain"
+  value       = module.cognito_user_pool.user_pool_domain
+}
+
+output "cognito_login_urls" {
+  description = "Cognito Login URLs for each client"
+  value       = module.cognito_user_pool.login_urls
+}
+
+output "cognito_user_pool_clients" {
+  description = "Cognito User Pool Clients information"
+  value       = module.cognito_user_pool.user_pool_clients
+}
+
 # API Gateway 出力値
 output "api_gateway_endpoint" {
   description = "API Gateway Endpoint URL"
