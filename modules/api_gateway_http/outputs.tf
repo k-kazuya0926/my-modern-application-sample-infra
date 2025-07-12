@@ -1,49 +1,24 @@
 output "api_id" {
-  description = "API Gateway HTTP API の ID"
+  description = "API Gateway のID"
   value       = aws_apigatewayv2_api.this.id
 }
 
-output "api_name" {
-  description = "API Gateway HTTP API の名前"
-  value       = aws_apigatewayv2_api.this.name
-}
-
-output "api_arn" {
-  description = "API Gateway HTTP API の ARN"
-  value       = aws_apigatewayv2_api.this.arn
-}
-
-output "execution_arn" {
-  description = "API Gateway の実行 ARN"
-  value       = aws_apigatewayv2_api.this.execution_arn
-}
-
 output "api_endpoint" {
-  description = "API Gateway の API エンドポイント"
+  description = "API Gateway のエンドポイント"
   value       = aws_apigatewayv2_api.this.api_endpoint
 }
 
-output "stage_name" {
-  description = "API Gateway ステージ名"
-  value       = aws_apigatewayv2_stage.this.name
+output "execution_arn" {
+  description = "API Gateway の実行ARN"
+  value       = aws_apigatewayv2_api.this.execution_arn
 }
 
-output "stage_arn" {
-  description = "API Gateway ステージ ARN"
-  value       = aws_apigatewayv2_stage.this.arn
-}
-
-output "invoke_url" {
-  description = "API Gateway の呼び出し URL"
+output "stage_invoke_url" {
+  description = "API Gateway ステージの呼び出しURL"
   value       = aws_apigatewayv2_stage.this.invoke_url
 }
 
-output "cloudwatch_log_group_name" {
-  description = "CloudWatch Logs グループの名前"
-  value       = aws_cloudwatch_log_group.api_gateway_logs.name
-}
-
-output "cloudwatch_log_group_arn" {
-  description = "CloudWatch Logs グループの ARN"
-  value       = aws_cloudwatch_log_group.api_gateway_logs.arn
+output "authorizer_id" {
+  description = "Cognito認証のオーソライザーID"
+  value       = var.cognito_user_pool_id != null ? aws_apigatewayv2_authorizer.cognito_authorizer[0].id : null
 }

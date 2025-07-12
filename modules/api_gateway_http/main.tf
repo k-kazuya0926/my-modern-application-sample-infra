@@ -71,3 +71,32 @@ resource "aws_lambda_permission" "api_gateway" {
   principal     = "apigateway.amazonaws.com"
   source_arn    = "${aws_apigatewayv2_api.this.execution_arn}/*/*"
 }
+
+# Cognito認証設定
+resource "aws_apigatewayv2_authorizer" "cognito_authorizer" {
+  count = var.cognito_user_pool_id != null ? 1 : 0
+
+  api_id           = aws_apigatewayv2_api.this.id
+  authorizer_type  = "JWT"
+  identity_sources = ["$request.header.Authorization"]
+  name             = "${var.github_repository_name}-${var.env}-${var.api_name}-cognito-authorizer"
+
+  jwt_configuration {
+    audience = [var.cognito_user_pool_client_id]
+    issuer   = "https://cognito-idp.${data.aws_region.current.id}.amazonaws.com/${var.cognito_user_pool_id}"
+  }
+}
+
+# 認証が必要なルート
+resource "aws_apigatewayv2_route" "auth_routes" {
+  count  = length(var.routes_with_auth)
+  api_id = aws_apigatewayv2_api.this.id
+
+  route_key          = var.routes_with_auth[count.index].route_key
+  target             = "integrations/${aws_apigatewayv2_integration.this[length(var.routes) + count.index].id}"
+  authorization_type = var.routes_with_auth[count.index].auth_type
+  authorizer_id      = var.cognito_user_pool_id != null ? aws_apigatewayv2_authorizer.cognito_authorizer[0].id : null
+}
+
+# 現在のAWSリージョンを取得
+data "aws_region" "current" {}

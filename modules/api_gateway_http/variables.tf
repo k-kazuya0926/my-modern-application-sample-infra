@@ -89,3 +89,24 @@ variable "tags" {
   type        = map(string)
   default     = {}
 }
+
+variable "cognito_user_pool_id" {
+  description = "Cognito User Pool ID（認証を有効にする場合）"
+  type        = string
+  default     = null
+}
+
+variable "cognito_user_pool_client_id" {
+  description = "Cognito User Pool Client ID（認証を有効にする場合）"
+  type        = string
+  default     = null
+}
+
+variable "routes_with_auth" {
+  description = "認証が必要なルート設定"
+  type = list(object({
+    route_key = string
+    auth_type = optional(string, "JWT")
+  }))
+  default = []
+}
