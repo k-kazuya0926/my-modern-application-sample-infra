@@ -31,13 +31,11 @@ module "api_gateway_auth_by_cognito" {
   github_repository_name = var.github_repository_name
   env                    = local.env
   api_name               = "auth-by-cognito"
-  description            = "Cognito authentication API"
+  description            = "Cognito protected endpoints"
 
-  routes = [
-    {
-      route_key = "POST /auth-by-cognito"
-    }
-  ]
+  # Cognito認証設定
+  cognito_user_pool_id        = module.cognito_user_pool_spa.user_pool_id
+  cognito_user_pool_client_id = module.cognito_user_pool_spa.user_pool_client_ids[0] # SPA用クライアント
 
   integrations = [
     {
@@ -47,9 +45,27 @@ module "api_gateway_auth_by_cognito" {
     }
   ]
 
+  # 認証が必要なルート
+  routes_with_auth = [
+    {
+      route_key = "POST /auth-by-cognito"
+      auth_type = "JWT"
+    }
+  ]
+
   lambda_permissions = [
     {
       function_name = module.lambda_auth_by_cognito.function_name
     }
   ]
+
+  # CORS設定をSPAに適合させる
+  cors_configuration = {
+    allow_credentials = true
+    allow_headers     = ["origin", "content-type", "accept", "authorization", "x-requested-with"]
+    allow_methods     = ["GET", "POST", "PUT", "DELETE", "OPTIONS"]
+    allow_origins     = ["http://localhost:3000", "https://localhost:3000"] # 開発環境用
+    expose_headers    = []
+    max_age           = 86400
+  }
 }
