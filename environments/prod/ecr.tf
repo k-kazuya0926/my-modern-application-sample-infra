@@ -53,3 +53,10 @@ module "ecr_feature_flags" {
   env                    = local.env
   ecr_repository_name    = "feature-flags"
 }
+
+module "ecr_auth_by_cognito" {
+  source                 = "../../modules/ecr"
+  github_repository_name = var.github_repository_name
+  env                    = local.env
+  ecr_repository_name    = "auth-by-cognito"
+}
