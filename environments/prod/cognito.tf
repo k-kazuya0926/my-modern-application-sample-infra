@@ -46,16 +46,16 @@ module "cognito_user_pool_spa" {
     email_message_by_link = "アカウントを確認するには、以下のリンクをクリックしてください: {##Click Here##}"
   }
 
-  # SPA用のクライアント設定
   user_pool_clients = [
+    # SPA用のクライアント設定
     {
       name                                 = "spa"
       generate_secret                      = false    # SPAはパブリッククライアント
       allowed_oauth_flows                  = ["code"] # PKCE付き認証コードフロー（推奨）
       allowed_oauth_flows_user_pool_client = true
-      allowed_oauth_scopes                 = ["openid", "email", "profile"]
-      callback_urls                        = ["http://localhost:3000/callback", "https://your-spa-domain.com/callback"]
-      logout_urls                          = ["http://localhost:3000/", "https://your-spa-domain.com/"]
+      allowed_oauth_scopes                 = ["openid"]
+      callback_urls                        = ["http://localhost:3000/callback"]
+      logout_urls                          = ["http://localhost:3000/"]
       explicit_auth_flows = [
         "ALLOW_USER_SRP_AUTH",
         "ALLOW_REFRESH_TOKEN_AUTH",
