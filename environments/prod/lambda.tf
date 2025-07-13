@@ -103,3 +103,12 @@ module "lambda_feature_flags" {
     APPCONFIG_CONFIGURATION_PROFILE_ID = module.appconfig_feature_flags.configuration_profile_id
   }
 }
+
+module "lambda_auth_by_cognito" {
+  source                 = "../../modules/lambda"
+  github_repository_name = var.github_repository_name
+  env                    = local.env
+  function_name          = "auth-by-cognito"
+  execution_role_arn     = module.lambda_execution_role_auth_by_cognito.iam_role_arn
+  image_uri              = "${module.ecr_auth_by_cognito.repository_url}:dummy"
+}

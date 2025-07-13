@@ -72,7 +72,9 @@ data "aws_iam_policy_document" "github_actions" {
       module.lambda_receive_bounce_mail.function_arn,
       "${module.lambda_receive_bounce_mail.function_arn}:*",
       module.lambda_feature_flags.function_arn,
-      "${module.lambda_feature_flags.function_arn}:*"
+      "${module.lambda_feature_flags.function_arn}:*",
+      module.lambda_auth_by_cognito.function_arn,
+      "${module.lambda_auth_by_cognito.function_arn}:*"
     ]
   }
 }
@@ -434,5 +436,31 @@ data "aws_iam_policy_document" "lambda_feature_flags" {
     resources = [
       "arn:aws:appconfig:${data.aws_region.current.id}:${data.aws_caller_identity.current.account_id}:application/${module.appconfig_feature_flags.application_id}/environment/${module.appconfig_feature_flags.environment_id}/configuration/${module.appconfig_feature_flags.configuration_profile_id}"
     ]
+  }
+}
+
+
+module "lambda_execution_role_auth_by_cognito" {
+  source                 = "../../modules/lambda_execution_role"
+  github_repository_name = var.github_repository_name
+  env                    = local.env
+  role_name              = "auth-by-cognito"
+  policy                 = data.aws_iam_policy_document.lambda_auth_by_cognito.json
+}
+
+data "aws_iam_policy_document" "lambda_auth_by_cognito" {
+  statement {
+    effect    = "Allow"
+    actions   = ["logs:CreateLogGroup"]
+    resources = ["arn:aws:logs:${data.aws_region.current.id}:${data.aws_caller_identity.current.account_id}:*"]
+  }
+
+  statement {
+    effect = "Allow"
+    actions = [
+      "logs:CreateLogStream",
+      "logs:PutLogEvents"
+    ]
+    resources = ["${module.lambda_auth_by_cognito.cloudwatch_log_group_arn}:*"]
   }
 }
