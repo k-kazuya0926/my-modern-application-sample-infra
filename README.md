@@ -11,7 +11,7 @@ https://github.com/k-kazuya0926/my-modern-application-sample
 
 ### AWSサービス
 - **Lambda**: サーバーレス処理
-- **API Gateway**: RESTful APIエンドポイント
+- **API Gateway**: RESTful APIエンドポイント、IDトークンの検証
 - **S3**: オブジェクトストレージ（読み取り用、書き込み用、コンテンツ用、メール本文用）
 - **DynamoDB**: NoSQLデータベース
 - **SES**: メール送信サービス
@@ -61,7 +61,7 @@ modules/               # 再利用可能モジュール
 
 ## 参考図書
 
-- 実践Terraform　AWSにおけるシステム設計とベストプラクティス
+- 実践Terraform AWSにおけるシステム設計とベストプラクティス
 - 詳解 Terraform 第3版 ―Infrastructure as Codeを実現する
 - GitHub CI/CD実践ガイド――持続可能なソフトウェア開発を支えるGitHub Actionsの設計と運用
 - AWS Lambda実践ガイド 第2版
