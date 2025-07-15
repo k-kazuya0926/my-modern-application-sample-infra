@@ -60,3 +60,24 @@ module "ecr_auth_by_cognito" {
   env                    = local.env
   ecr_repository_name    = "auth-by-cognito"
 }
+
+module "ecr_process_payment" {
+  source                 = "../../modules/ecr"
+  github_repository_name = var.github_repository_name
+  env                    = local.env
+  ecr_repository_name    = "process-payment"
+}
+
+module "ecr_create_purchase_history" {
+  source                 = "../../modules/ecr"
+  github_repository_name = var.github_repository_name
+  env                    = local.env
+  ecr_repository_name    = "create-purchase-history"
+}
+
+module "ecr_award_points" {
+  source                 = "../../modules/ecr"
+  github_repository_name = var.github_repository_name
+  env                    = local.env
+  ecr_repository_name    = "award-points"
+}

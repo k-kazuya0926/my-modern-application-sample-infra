@@ -42,7 +42,10 @@ data "aws_iam_policy_document" "github_actions" {
       module.ecr_read_message_and_send_mail.repository_arn,
       module.ecr_receive_bounce_mail.repository_arn,
       module.ecr_feature_flags.repository_arn,
-      module.ecr_auth_by_cognito.repository_arn
+      module.ecr_auth_by_cognito.repository_arn,
+      module.ecr_process_payment.repository_arn,
+      module.ecr_create_purchase_history.repository_arn,
+      module.ecr_award_points.repository_arn
     ]
   }
 
