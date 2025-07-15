@@ -44,8 +44,11 @@ data "aws_iam_policy_document" "github_actions" {
       module.ecr_feature_flags.repository_arn,
       module.ecr_auth_by_cognito.repository_arn,
       module.ecr_process_payment.repository_arn,
+      module.ecr_cancel_payment.repository_arn,
       module.ecr_create_purchase_history.repository_arn,
-      module.ecr_award_points.repository_arn
+      module.ecr_delete_purchase_history.repository_arn,
+      module.ecr_award_points.repository_arn,
+      module.ecr_cancel_points.repository_arn
     ]
   }
 

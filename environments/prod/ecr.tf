@@ -68,6 +68,13 @@ module "ecr_process_payment" {
   ecr_repository_name    = "process-payment"
 }
 
+module "ecr_cancel_payment" {
+  source                 = "../../modules/ecr"
+  github_repository_name = var.github_repository_name
+  env                    = local.env
+  ecr_repository_name    = "cancel-payment"
+}
+
 module "ecr_create_purchase_history" {
   source                 = "../../modules/ecr"
   github_repository_name = var.github_repository_name
@@ -75,9 +82,23 @@ module "ecr_create_purchase_history" {
   ecr_repository_name    = "create-purchase-history"
 }
 
+module "ecr_delete_purchase_history" {
+  source                 = "../../modules/ecr"
+  github_repository_name = var.github_repository_name
+  env                    = local.env
+  ecr_repository_name    = "delete-purchase-history"
+}
+
 module "ecr_award_points" {
   source                 = "../../modules/ecr"
   github_repository_name = var.github_repository_name
   env                    = local.env
   ecr_repository_name    = "award-points"
+}
+
+module "ecr_cancel_points" {
+  source                 = "../../modules/ecr"
+  github_repository_name = var.github_repository_name
+  env                    = local.env
+  ecr_repository_name    = "cancel-points"
 }
