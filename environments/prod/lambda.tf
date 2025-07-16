@@ -157,12 +157,3 @@ module "lambda_award_points" {
   execution_role_arn     = module.lambda_execution_role_award_points.iam_role_arn
   image_uri              = "${module.ecr_award_points.repository_url}:dummy"
 }
-
-module "lambda_cancel_points" {
-  source                 = "../../modules/lambda"
-  github_repository_name = var.github_repository_name
-  env                    = local.env
-  function_name          = "cancel-points"
-  execution_role_arn     = module.lambda_execution_role_cancel_points.iam_role_arn
-  image_uri              = "${module.ecr_cancel_points.repository_url}:dummy"
-}

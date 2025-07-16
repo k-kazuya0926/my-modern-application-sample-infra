@@ -95,10 +95,3 @@ module "ecr_award_points" {
   env                    = local.env
   ecr_repository_name    = "award-points"
 }
-
-module "ecr_cancel_points" {
-  source                 = "../../modules/ecr"
-  github_repository_name = var.github_repository_name
-  env                    = local.env
-  ecr_repository_name    = "cancel-points"
-}

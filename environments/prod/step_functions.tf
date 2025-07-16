@@ -122,8 +122,7 @@ module "step_functions_saga_orchestration" {
         module.lambda_create_purchase_history.function_arn,
         module.lambda_award_points.function_arn,
         module.lambda_cancel_payment.function_arn,
-        module.lambda_delete_purchase_history.function_arn,
-        module.lambda_cancel_points.function_arn
+        module.lambda_delete_purchase_history.function_arn
       ]
     }
   ]

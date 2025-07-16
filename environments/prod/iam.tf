@@ -47,8 +47,7 @@ data "aws_iam_policy_document" "github_actions" {
       module.ecr_cancel_payment.repository_arn,
       module.ecr_create_purchase_history.repository_arn,
       module.ecr_delete_purchase_history.repository_arn,
-      module.ecr_award_points.repository_arn,
-      module.ecr_cancel_points.repository_arn
+      module.ecr_award_points.repository_arn
     ]
   }
 
@@ -90,9 +89,7 @@ data "aws_iam_policy_document" "github_actions" {
       module.lambda_delete_purchase_history.function_arn,
       "${module.lambda_delete_purchase_history.function_arn}:*",
       module.lambda_award_points.function_arn,
-      "${module.lambda_award_points.function_arn}:*",
-      module.lambda_cancel_points.function_arn,
-      "${module.lambda_cancel_points.function_arn}:*"
+      "${module.lambda_award_points.function_arn}:*"
     ]
   }
 }
@@ -610,31 +607,5 @@ data "aws_iam_policy_document" "lambda_award_points" {
       "logs:PutLogEvents"
     ]
     resources = ["${module.lambda_award_points.cloudwatch_log_group_arn}:*"]
-  }
-}
-
-
-module "lambda_execution_role_cancel_points" {
-  source                 = "../../modules/lambda_execution_role"
-  github_repository_name = var.github_repository_name
-  env                    = local.env
-  role_name              = "cancel-points"
-  policy                 = data.aws_iam_policy_document.lambda_cancel_points.json
-}
-
-data "aws_iam_policy_document" "lambda_cancel_points" {
-  statement {
-    effect    = "Allow"
-    actions   = ["logs:CreateLogGroup"]
-    resources = ["arn:aws:logs:${data.aws_region.current.id}:${data.aws_caller_identity.current.account_id}:*"]
-  }
-
-  statement {
-    effect = "Allow"
-    actions = [
-      "logs:CreateLogStream",
-      "logs:PutLogEvents"
-    ]
-    resources = ["${module.lambda_cancel_points.cloudwatch_log_group_arn}:*"]
   }
 }
