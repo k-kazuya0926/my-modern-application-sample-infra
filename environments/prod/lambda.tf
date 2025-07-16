@@ -119,7 +119,16 @@ module "lambda_process_payment" {
   env                    = local.env
   function_name          = "process-payment"
   execution_role_arn     = module.lambda_execution_role_process_payment.iam_role_arn
-  image_uri              = "${module.ecr_process_payment.repository_url}:sha-ca4ea7e20ce37c138dbee6401f47ad035b24e852"
+  image_uri              = "${module.ecr_process_payment.repository_url}:dummy"
+}
+
+module "lambda_cancel_payment" {
+  source                 = "../../modules/lambda"
+  github_repository_name = var.github_repository_name
+  env                    = local.env
+  function_name          = "cancel-payment"
+  execution_role_arn     = module.lambda_execution_role_cancel_payment.iam_role_arn
+  image_uri              = "${module.ecr_cancel_payment.repository_url}:dummy"
 }
 
 module "lambda_create_purchase_history" {
@@ -128,7 +137,16 @@ module "lambda_create_purchase_history" {
   env                    = local.env
   function_name          = "create-purchase-history"
   execution_role_arn     = module.lambda_execution_role_create_purchase_history.iam_role_arn
-  image_uri              = "${module.ecr_create_purchase_history.repository_url}:sha-ca4ea7e20ce37c138dbee6401f47ad035b24e852"
+  image_uri              = "${module.ecr_create_purchase_history.repository_url}:dummy"
+}
+
+module "lambda_delete_purchase_history" {
+  source                 = "../../modules/lambda"
+  github_repository_name = var.github_repository_name
+  env                    = local.env
+  function_name          = "delete-purchase-history"
+  execution_role_arn     = module.lambda_execution_role_delete_purchase_history.iam_role_arn
+  image_uri              = "${module.ecr_delete_purchase_history.repository_url}:dummy"
 }
 
 module "lambda_award_points" {
@@ -137,5 +155,14 @@ module "lambda_award_points" {
   env                    = local.env
   function_name          = "award-points"
   execution_role_arn     = module.lambda_execution_role_award_points.iam_role_arn
-  image_uri              = "${module.ecr_award_points.repository_url}:sha-ca4ea7e20ce37c138dbee6401f47ad035b24e852"
+  image_uri              = "${module.ecr_award_points.repository_url}:dummy"
+}
+
+module "lambda_cancel_points" {
+  source                 = "../../modules/lambda"
+  github_repository_name = var.github_repository_name
+  env                    = local.env
+  function_name          = "cancel-points"
+  execution_role_arn     = module.lambda_execution_role_cancel_points.iam_role_arn
+  image_uri              = "${module.ecr_cancel_points.repository_url}:dummy"
 }
