@@ -10,18 +10,19 @@ https://github.com/k-kazuya0926/my-modern-application-sample
 - **AWS Provider**: 6.0.0
 
 ### AWSサービス
-- **Lambda**: サーバーレス処理
 - **API Gateway**: RESTful APIエンドポイント、IDトークンの検証
-- **S3**: オブジェクトストレージ（読み取り用、書き込み用、コンテンツ用、メール本文用）
-- **DynamoDB**: NoSQLデータベース
-- **SES**: メール送信サービス
-- **SQS**: メッセージキューサービス
-- **SNS**: 通知サービス
-- **X-Ray**: 分散トレーシング
-- **ECR**: Dockerコンテナレジストリ
-- **IAM**: アクセス権限管理
 - **AppConfig**: フィーチャーフラグ管理（アプリケーション設定の動的変更）
 - **Cognito**: ユーザー認証・認可サービス
+- **DynamoDB**: NoSQLデータベース
+- **ECR**: Dockerコンテナレジストリ
+- **IAM**: アクセス権限管理
+- **Lambda**: サーバーレス処理
+- **S3**: オブジェクトストレージ（読み取り用、書き込み用、コンテンツ用、メール本文用）
+- **SES**: メール送信サービス
+- **SNS**: 通知サービス
+- **SQS**: メッセージキューサービス
+- **Step Functions**: ワークフロー管理・オーケストレーション
+- **X-Ray**: 分散トレーシング
 
 ### CI/CD
 - **GitHub Actions**: OIDC連携によるセキュアなデプロイメント
@@ -48,6 +49,7 @@ environments/          # 環境別設定
 ├── prod/              # 本番環境
 │   ├── data_stores/   # データストア設定
 │   │   └── dynamodb/  # DynamoDB設定
+│   ├── api_gateway.tf # API Gateway
 │   └── ...
 └── backend.hcl.example # バックエンド設定例
 
