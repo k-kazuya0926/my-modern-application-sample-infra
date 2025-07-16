@@ -13,8 +13,8 @@ variable "function_name" {
   type        = string
 }
 
-variable "execution_role_arn" {
-  description = "Lambda実行ロールのARN"
+variable "iam_policy" {
+  description = "Lambda実行ロールに適用するIAMポリシー"
   type        = string
 }
 

@@ -94,15 +94,6 @@ data "aws_iam_policy_document" "github_actions" {
   }
 }
 
-
-module "lambda_execution_role_hello_world" {
-  source                 = "../../modules/lambda_execution_role"
-  github_repository_name = var.github_repository_name
-  env                    = local.env
-  role_name              = "hello-world"
-  policy                 = data.aws_iam_policy_document.lambda_hello_world.json
-}
-
 data "aws_iam_policy_document" "lambda_hello_world" {
   statement {
     effect    = "Allow"
@@ -120,15 +111,6 @@ data "aws_iam_policy_document" "lambda_hello_world" {
   }
 }
 
-
-module "lambda_execution_role_tmp" {
-  source                 = "../../modules/lambda_execution_role"
-  github_repository_name = var.github_repository_name
-  env                    = local.env
-  role_name              = "tmp"
-  policy                 = data.aws_iam_policy_document.lambda_tmp.json
-}
-
 data "aws_iam_policy_document" "lambda_tmp" {
   statement {
     effect    = "Allow"
@@ -144,15 +126,6 @@ data "aws_iam_policy_document" "lambda_tmp" {
     ]
     resources = ["${module.lambda_tmp.cloudwatch_log_group_arn}:*"]
   }
-}
-
-
-module "lambda_execution_role_read_and_write_s3" {
-  source                 = "../../modules/lambda_execution_role"
-  github_repository_name = var.github_repository_name
-  env                    = local.env
-  role_name              = "read-and-write-s3"
-  policy                 = data.aws_iam_policy_document.lambda_read_and_write_s3.json
 }
 
 data "aws_iam_policy_document" "lambda_read_and_write_s3" {
@@ -192,15 +165,6 @@ data "aws_iam_policy_document" "lambda_read_and_write_s3" {
       "${module.s3_write.bucket_arn}/*"
     ]
   }
-}
-
-
-module "lambda_execution_role_register_user" {
-  source                 = "../../modules/lambda_execution_role"
-  github_repository_name = var.github_repository_name
-  env                    = local.env
-  role_name              = "register-user"
-  policy                 = data.aws_iam_policy_document.lambda_register_user.json
 }
 
 data "aws_iam_policy_document" "lambda_register_user" {
@@ -253,16 +217,6 @@ data "aws_iam_policy_document" "lambda_register_user" {
   }
 }
 
-
-module "lambda_execution_role_send_message" {
-  source                 = "../../modules/lambda_execution_role"
-  github_repository_name = var.github_repository_name
-  env                    = local.env
-  role_name              = "send-message"
-  policy                 = data.aws_iam_policy_document.lambda_send_message.json
-  enable_xray            = true
-}
-
 data "aws_iam_policy_document" "lambda_send_message" {
   statement {
     effect    = "Allow"
@@ -309,16 +263,6 @@ data "aws_iam_policy_document" "lambda_send_message" {
       module.sqs_send_mail.queue_arn
     ]
   }
-}
-
-
-module "lambda_execution_role_read_message_and_send_mail" {
-  source                 = "../../modules/lambda_execution_role"
-  github_repository_name = var.github_repository_name
-  env                    = local.env
-  role_name              = "read-message-and-send-mail"
-  policy                 = data.aws_iam_policy_document.lambda_read_message_and_send_mail.json
-  enable_xray            = true
 }
 
 data "aws_iam_policy_document" "lambda_read_message_and_send_mail" {
@@ -380,16 +324,6 @@ data "aws_iam_policy_document" "lambda_read_message_and_send_mail" {
   }
 }
 
-
-module "lambda_execution_role_receive_bounce_mail" {
-  source                 = "../../modules/lambda_execution_role"
-  github_repository_name = var.github_repository_name
-  env                    = local.env
-  role_name              = "receive-bounce-mail"
-  policy                 = data.aws_iam_policy_document.lambda_receive_bounce_mail.json
-  enable_xray            = true
-}
-
 data "aws_iam_policy_document" "lambda_receive_bounce_mail" {
   statement {
     effect    = "Allow"
@@ -415,15 +349,6 @@ data "aws_iam_policy_document" "lambda_receive_bounce_mail" {
       data.terraform_remote_state.dynamodb.outputs.mail_addresses_table_arn
     ]
   }
-}
-
-
-module "lambda_execution_role_feature_flags" {
-  source                 = "../../modules/lambda_execution_role"
-  github_repository_name = var.github_repository_name
-  env                    = local.env
-  role_name              = "feature-flags"
-  policy                 = data.aws_iam_policy_document.lambda_feature_flags.json
 }
 
 data "aws_iam_policy_document" "lambda_feature_flags" {
@@ -454,15 +379,6 @@ data "aws_iam_policy_document" "lambda_feature_flags" {
   }
 }
 
-
-module "lambda_execution_role_auth_by_cognito" {
-  source                 = "../../modules/lambda_execution_role"
-  github_repository_name = var.github_repository_name
-  env                    = local.env
-  role_name              = "auth-by-cognito"
-  policy                 = data.aws_iam_policy_document.lambda_auth_by_cognito.json
-}
-
 data "aws_iam_policy_document" "lambda_auth_by_cognito" {
   statement {
     effect    = "Allow"
@@ -478,15 +394,6 @@ data "aws_iam_policy_document" "lambda_auth_by_cognito" {
     ]
     resources = ["${module.lambda_auth_by_cognito.cloudwatch_log_group_arn}:*"]
   }
-}
-
-
-module "lambda_execution_role_process_payment" {
-  source                 = "../../modules/lambda_execution_role"
-  github_repository_name = var.github_repository_name
-  env                    = local.env
-  role_name              = "process-payment"
-  policy                 = data.aws_iam_policy_document.lambda_process_payment.json
 }
 
 data "aws_iam_policy_document" "lambda_process_payment" {
@@ -506,15 +413,6 @@ data "aws_iam_policy_document" "lambda_process_payment" {
   }
 }
 
-
-module "lambda_execution_role_cancel_payment" {
-  source                 = "../../modules/lambda_execution_role"
-  github_repository_name = var.github_repository_name
-  env                    = local.env
-  role_name              = "cancel-payment"
-  policy                 = data.aws_iam_policy_document.lambda_cancel_payment.json
-}
-
 data "aws_iam_policy_document" "lambda_cancel_payment" {
   statement {
     effect    = "Allow"
@@ -530,15 +428,6 @@ data "aws_iam_policy_document" "lambda_cancel_payment" {
     ]
     resources = ["${module.lambda_cancel_payment.cloudwatch_log_group_arn}:*"]
   }
-}
-
-
-module "lambda_execution_role_create_purchase_history" {
-  source                 = "../../modules/lambda_execution_role"
-  github_repository_name = var.github_repository_name
-  env                    = local.env
-  role_name              = "create-purchase-history"
-  policy                 = data.aws_iam_policy_document.lambda_create_purchase_history.json
 }
 
 data "aws_iam_policy_document" "lambda_create_purchase_history" {
@@ -558,15 +447,6 @@ data "aws_iam_policy_document" "lambda_create_purchase_history" {
   }
 }
 
-
-module "lambda_execution_role_delete_purchase_history" {
-  source                 = "../../modules/lambda_execution_role"
-  github_repository_name = var.github_repository_name
-  env                    = local.env
-  role_name              = "delete-purchase-history"
-  policy                 = data.aws_iam_policy_document.lambda_delete_purchase_history.json
-}
-
 data "aws_iam_policy_document" "lambda_delete_purchase_history" {
   statement {
     effect    = "Allow"
@@ -582,15 +462,6 @@ data "aws_iam_policy_document" "lambda_delete_purchase_history" {
     ]
     resources = ["${module.lambda_delete_purchase_history.cloudwatch_log_group_arn}:*"]
   }
-}
-
-
-module "lambda_execution_role_award_points" {
-  source                 = "../../modules/lambda_execution_role"
-  github_repository_name = var.github_repository_name
-  env                    = local.env
-  role_name              = "award-points"
-  policy                 = data.aws_iam_policy_document.lambda_award_points.json
 }
 
 data "aws_iam_policy_document" "lambda_award_points" {
