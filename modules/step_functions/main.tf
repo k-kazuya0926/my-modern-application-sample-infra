@@ -12,6 +12,10 @@ resource "aws_sfn_state_machine" "this" {
     level                  = var.log_level
   }
 
+  tracing_configuration {
+    enabled = var.enable_xray_tracing
+  }
+
   tags = var.tags
 }
 
