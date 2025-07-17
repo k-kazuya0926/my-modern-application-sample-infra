@@ -47,7 +47,9 @@ data "aws_iam_policy_document" "github_actions" {
       module.ecr_cancel_payment.repository_arn,
       module.ecr_create_purchase_history.repository_arn,
       module.ecr_delete_purchase_history.repository_arn,
-      module.ecr_award_points.repository_arn
+      module.ecr_award_points.repository_arn,
+      module.ecr_fan_out_consumer_1.repository_arn,
+      module.ecr_fan_out_consumer_2.repository_arn,
     ]
   }
 
@@ -89,7 +91,11 @@ data "aws_iam_policy_document" "github_actions" {
       module.lambda_delete_purchase_history.function_arn,
       "${module.lambda_delete_purchase_history.function_arn}:*",
       module.lambda_award_points.function_arn,
-      "${module.lambda_award_points.function_arn}:*"
+      "${module.lambda_award_points.function_arn}:*",
+      module.lambda_fan_out_consumer_1.function_arn,
+      "${module.lambda_fan_out_consumer_1.function_arn}:*",
+      module.lambda_fan_out_consumer_2.function_arn,
+      "${module.lambda_fan_out_consumer_2.function_arn}:*"
     ]
   }
 }

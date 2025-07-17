@@ -32,7 +32,7 @@ resource "aws_sns_topic_subscription" "this" {
   endpoint_auto_confirms          = var.subscriptions[count.index].endpoint_auto_confirms
   raw_message_delivery            = var.subscriptions[count.index].raw_message_delivery
   filter_policy                   = var.subscriptions[count.index].filter_policy
-  filter_policy_scope             = var.subscriptions[count.index].filter_policy_scope
+  filter_policy_scope             = var.subscriptions[count.index].filter_policy != null ? var.subscriptions[count.index].filter_policy_scope : null
   delivery_policy                 = var.subscriptions[count.index].delivery_policy
   redrive_policy                  = var.subscriptions[count.index].redrive_policy
 }

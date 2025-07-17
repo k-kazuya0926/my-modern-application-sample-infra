@@ -296,3 +296,57 @@ module "lambda_award_points" {
   function_name          = "award-points"
   image_uri              = "${module.ecr_award_points.repository_url}:dummy"
 }
+
+module "lambda_fan_out_consumer_1" {
+  source                 = "../../modules/lambda"
+  github_repository_name = var.github_repository_name
+  env                    = local.env
+  function_name          = "fan-out-consumer-1"
+  image_uri              = "${module.ecr_fan_out_consumer_1.repository_url}:dummy"
+  environment_variables = {
+    ENV = local.env
+  }
+  sqs_trigger_queue_arn = module.sqs_fan_out_1.queue_arn
+  enable_tracing        = false
+
+  policy_statements = [
+    {
+      effect = "Allow"
+      actions = [
+        "sqs:ReceiveMessage",
+        "sqs:DeleteMessage",
+        "sqs:GetQueueAttributes"
+      ]
+      resources = [
+        module.sqs_fan_out_1.queue_arn
+      ]
+    }
+  ]
+}
+
+module "lambda_fan_out_consumer_2" {
+  source                 = "../../modules/lambda"
+  github_repository_name = var.github_repository_name
+  env                    = local.env
+  function_name          = "fan-out-consumer-2"
+  image_uri              = "${module.ecr_fan_out_consumer_2.repository_url}:dummy"
+  environment_variables = {
+    ENV = local.env
+  }
+  sqs_trigger_queue_arn = module.sqs_fan_out_2.queue_arn
+  enable_tracing        = false
+
+  policy_statements = [
+    {
+      effect = "Allow"
+      actions = [
+        "sqs:ReceiveMessage",
+        "sqs:DeleteMessage",
+        "sqs:GetQueueAttributes"
+      ]
+      resources = [
+        module.sqs_fan_out_2.queue_arn
+      ]
+    }
+  ]
+}

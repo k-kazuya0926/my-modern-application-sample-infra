@@ -16,3 +16,30 @@ module "sns_bounce_notifications" {
     }
   ]
 }
+
+module "sns_fan_out" {
+  source = "../../modules/sns"
+
+  github_repository_name = var.github_repository_name
+  env                    = local.env
+  topic_name             = "fan-out"
+
+  # スタンダードタイプ（FIFOではない）
+  fifo_topic = false
+
+  # SQSキューのサブスクリプション
+  subscriptions = [
+    {
+      protocol            = "sqs"
+      endpoint            = module.sqs_fan_out_1.queue_arn
+      filter_policy       = null
+      filter_policy_scope = null
+    },
+    {
+      protocol            = "sqs"
+      endpoint            = module.sqs_fan_out_2.queue_arn
+      filter_policy       = null
+      filter_policy_scope = null
+    }
+  ]
+}
