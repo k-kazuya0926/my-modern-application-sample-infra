@@ -13,11 +13,6 @@ variable "function_name" {
   type        = string
 }
 
-variable "iam_policy" {
-  description = "Lambda実行ロールに適用するIAMポリシー"
-  type        = string
-}
-
 variable "image_uri" {
   description = "コンテナイメージのURI（ECRリポジトリのURI）"
   type        = string
@@ -88,4 +83,14 @@ variable "enable_tracing" {
   description = "X-Rayトレーシングを有効にするかどうか"
   type        = bool
   default     = false
+}
+
+variable "policy_statements" {
+  description = "Lambda実行ロールに追加するIAMポリシーステートメント（CloudWatch Logsの基本権限は自動で追加されます）"
+  type = list(object({
+    effect    = string
+    actions   = list(string)
+    resources = list(string)
+  }))
+  default = []
 }

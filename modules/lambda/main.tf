@@ -18,9 +18,38 @@ data "aws_iam_policy_document" "assume_role" {
   }
 }
 
+# IAMポリシードキュメント
+data "aws_iam_policy_document" "execution_policy" {
+  # 基本的なCloudWatch Logsの権限
+  statement {
+    effect    = "Allow"
+    actions   = ["logs:CreateLogGroup"]
+    resources = ["arn:aws:logs:${data.aws_region.current.id}:${data.aws_caller_identity.current.account_id}:*"]
+  }
+
+  statement {
+    effect = "Allow"
+    actions = [
+      "logs:CreateLogStream",
+      "logs:PutLogEvents"
+    ]
+    resources = ["${aws_cloudwatch_log_group.lambda_logs.arn}:*"]
+  }
+
+  # 追加のポリシーステートメント
+  dynamic "statement" {
+    for_each = var.policy_statements
+    content {
+      effect    = statement.value.effect
+      actions   = statement.value.actions
+      resources = statement.value.resources
+    }
+  }
+}
+
 resource "aws_iam_policy" "execution_policy" {
   name   = "${var.github_repository_name}-${var.env}-${var.function_name}"
-  policy = var.iam_policy
+  policy = data.aws_iam_policy_document.execution_policy.json
 }
 
 resource "aws_iam_role_policy_attachment" "execution_policy" {
