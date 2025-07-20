@@ -1,130 +1,132 @@
 # CLAUDE.md
 
-This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+このファイルは、このリポジトリでコードを操作する際のClaude Code (claude.ai/code) へのガイダンスを提供します。
 
-## Project Overview
+**重要**: コードベースに変更を加える際は、このファイルの内容を適宜更新し、最新の状態を保つようにしてください。
 
-This is the infrastructure as code repository for a modern serverless application using Terraform on AWS. The infrastructure supports a microservices architecture with event-driven communication patterns.
+## プロジェクト概要
 
-## Common Commands
+これは、AWS上でTerraformを使用したモダンなサーバーレスアプリケーションのInfrastructure as Codeリポジトリです。このインフラストラクチャは、イベント駆動通信パターンを持つマイクロサービスアーキテクチャをサポートしています。
 
-### Terraform Operations
+## 共通コマンド
+
+### Terraform操作
 ```bash
-# Navigate to environment directory
+# 環境ディレクトリに移動
 cd environments/prod
 
-# Initialize Terraform with backend configuration
+# バックエンド設定でTerraformを初期化
 terraform init -backend-config=backend.hcl
 
-# Plan infrastructure changes
+# インフラストラクチャの変更を計画
 terraform plan
 
-# Apply infrastructure changes
+# インフラストラクチャの変更を適用
 terraform apply
 
-# Validate configuration
+# 設定を検証
 terraform validate
 
-# Format code
+# コードをフォーマット
 terraform fmt -recursive
 
-# Show current state
+# 現在の状態を表示
 terraform show
 
-# Import existing resources
+# 既存リソースをインポート
 terraform import <resource_type>.<resource_name> <resource_id>
 ```
 
-### Backend Configuration
-- Copy `environments/backend.hcl.example` to `environments/prod/backend.hcl`
-- Configure S3 bucket name and region for state storage
-- State files are stored in S3 with DynamoDB locking enabled
+### バックエンド設定
+- `environments/backend.hcl.example`を`environments/prod/backend.hcl`にコピー
+- 状態保存用のS3バケット名とリージョンを設定
+- 状態ファイルはS3に保存され、DynamoDBロックが有効
 
-## Architecture
+## アーキテクチャ
 
-### Module Structure
-- **environments/**: Environment-specific configurations (currently `prod`)
-- **modules/**: Reusable Terraform modules for AWS services
-- **environments/prod/data_stores/**: Separate state management for data layer
+### モジュール構造
+- **environments/**: 環境固有の設定（現在は`prod`）
+- **modules/**: AWSサービス用の再利用可能なTerraformモジュール
+- **environments/prod/data_stores/**: データレイヤー用の個別状態管理
 
-### Key AWS Services
-- **Lambda**: Container-based functions with individual IAM roles
-- **API Gateway**: HTTP API with Cognito integration for authentication
-- **Step Functions**: Workflow orchestration with X-Ray tracing
-- **DynamoDB**: NoSQL database with separate state management
-- **S3**: Multiple buckets for different purposes (read, write, contents, mail)
-- **SQS/SNS**: Message queuing and fan-out patterns
-- **ECR**: Container registry for Lambda functions
-- **Cognito**: User authentication and authorization
-- **AppConfig**: Feature flag management
-- **SES**: Email service with bounce handling
+### 主要AWSサービス
+- **Lambda**: 個別のIAMロールを持つコンテナベース関数
+- **API Gateway**: 認証用Cognito統合のHTTP API
+- **Step Functions**: X-Rayトレーシングによるワークフロー調整
+- **DynamoDB**: 個別状態管理のNoSQLデータベース
+- **S3**: 異なる目的のための複数バケット（read、write、contents、mail）
+- **SQS/SNS**: メッセージキューイングとファンアウトパターン
+- **ECR**: Lambda関数用コンテナレジストリ
+- **Cognito**: ユーザー認証と認可
+- **AppConfig**: フィーチャーフラグ管理
+- **SES**: バウンス処理付きメールサービス
 
-### Lambda Architecture Pattern
-Each Lambda function:
-- Has its own IAM execution role with least privilege permissions
-- Uses container images from ECR (not ZIP files)
-- Has dedicated CloudWatch log groups
-- Supports custom policy statements via `policy_statements` variable
-- Can have S3 or SQS triggers configured
-- Optionally enables X-Ray tracing
+### Lambdaアーキテクチャパターン
+各Lambda関数は以下を持ちます：
+- 最小権限によるIAM実行ロール
+- ECRからのコンテナイメージ使用（ZIPファイルではない）
+- 専用のCloudWatchログループ
+- `policy_statements`変数によるカスタムポリシーステートメントのサポート
+- S3またはSQSトリガーの設定可能
+- オプションでX-Rayトレーシングを有効化
 
-### Security Patterns
-- Individual IAM roles per Lambda function (not shared roles)
-- Least privilege principle with specific policy statements
-- GitHub Actions OIDC integration for secure CI/CD
-- Environment variable injection for configuration
+### セキュリティパターン
+- Lambda関数ごとの個別IAMロール（共有ロールではない）
+- 特定のポリシーステートメントによる最小権限の原則
+- セキュアなCI/CDのためのGitHub Actions OIDC統合
+- 設定のための環境変数注入
 
-### State Management
-- Main infrastructure in `environments/prod/`
-- DynamoDB tables managed separately in `environments/prod/data_stores/`
-- Remote state references between layers using `terraform_remote_state`
+### 状態管理
+- `environments/prod/`のメインインフラストラクチャ
+- `environments/prod/data_stores/`で個別に管理されるDynamoDBテーブル
+- `terraform_remote_state`を使用したレイヤー間のリモート状態参照
 
-## Development Workflow
+## 開発ワークフロー
 
-### Adding New Lambda Functions
-1. Create ECR repository in `ecr.tf`
-2. Add Lambda module in `lambda.tf` with required configurations:
-   - `function_name`: Unique identifier
-   - `image_uri`: ECR repository URL
-   - `policy_statements`: Required IAM permissions
-   - `environment_variables`: Runtime configuration
-   - Optional triggers: `s3_trigger_*` or `sqs_trigger_*`
+### 新しいLambda関数の追加
+1. `ecr.tf`でECRリポジトリを作成
+2. `lambda.tf`で必要な設定を含むLambdaモジュールを追加：
+   - `function_name`: 一意の識別子
+   - `image_uri`: ECRリポジトリURL
+   - `policy_statements`: 必要なIAM権限
+   - `environment_variables`: ランタイム設定
+   - オプショントリガー: `s3_trigger_*`または`sqs_trigger_*`
 
-### Module Development
-- All modules follow standard structure: `main.tf`, `variables.tf`, `outputs.tf`
-- Use data sources for current AWS account/region information
-- Implement dynamic policy statements for flexible IAM permissions
-- Support conditional resource creation with `count` parameter
+### モジュール開発
+- すべてのモジュールは標準構造に従う：`main.tf`、`variables.tf`、`outputs.tf`
+- 現在のAWSアカウント/リージョン情報にはデータソースを使用
+- 柔軟なIAM権限のための動的ポリシーステートメントを実装
+- `count`パラメータによる条件付きリソース作成をサポート
 
-### Terraform Versions
+### Terraformバージョン
 - Terraform: 1.12.2
-- AWS Provider: 6.0.0
-- Backend: S3 with state locking via DynamoDB
+- AWSプロバイダー: 6.0.0
+- バックエンド: DynamoDBによる状態ロック付きS3
 
-## File Organization
+## ファイル構成
 
-### Environment Structure
+### 環境構造
 ```
 environments/prod/
-├── data_stores/dynamodb/    # Separate state for DynamoDB
-├── backend.hcl             # Backend configuration
-├── terraform.tfvars        # Environment variables
-├── *.tf                    # Service configurations
+├── data_stores/dynamodb/    # DynamoDB用の個別状態
+├── backend.hcl             # バックエンド設定
+├── terraform.tfvars        # 環境変数
+├── *.tf                    # サービス設定
 ```
 
-### Module Structure
+### モジュール構造
 ```
 modules/<service>/
-├── main.tf                 # Resource definitions
-├── variables.tf            # Input variables
-├── outputs.tf              # Output values
+├── main.tf                 # リソース定義
+├── variables.tf            # 入力変数
+├── outputs.tf              # 出力値
 ```
 
-## Key Conventions
+## 主要な慣例
 
-- Resource naming: `${var.github_repository_name}-${var.env}-${specific_name}`
-- All Lambda functions use container packaging
-- IAM policies use dynamic statements for flexibility
-- Log retention periods are configurable
-- X-Ray tracing is optional per function
-- Environment variables passed via Terraform
+- リソース命名: `${var.github_repository_name}-${var.env}-${specific_name}`
+- すべてのLambda関数はコンテナパッケージングを使用
+- IAMポリシーは柔軟性のために動的ステートメントを使用
+- ログ保持期間は設定可能
+- X-Rayトレーシングは関数ごとにオプション
+- 環境変数はTerraform経由で渡される
