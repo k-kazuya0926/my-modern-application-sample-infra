@@ -1,37 +1,37 @@
 variable "name_prefix" {
-  description = "Prefix for all resource names"
+  description = "全リソース名のプレフィックス"
   type        = string
 }
 
 variable "cidr_block" {
-  description = "CIDR block for the VPC"
+  description = "VPCのCIDRブロック"
   type        = string
   default     = "10.0.0.0/16"
 }
 
 variable "availability_zones" {
-  description = "List of availability zones"
+  description = "アベイラビリティゾーンのリスト"
   type        = list(string)
 }
 
 variable "public_subnet_cidrs" {
-  description = "CIDR blocks for public subnets"
+  description = "パブリックサブネットのCIDRブロック"
   type        = list(string)
 }
 
 variable "private_subnet_cidrs" {
-  description = "CIDR blocks for private subnets"
+  description = "プライベートサブネットのCIDRブロック"
   type        = list(string)
 }
 
 variable "enable_internet_gateway" {
-  description = "Whether to create Internet Gateway"
+  description = "インターネットゲートウェイを作成するかどうか"
   type        = bool
   default     = true
 }
 
 variable "enable_nat_gateway" {
-  description = "Whether to create NAT Gateway for private subnets"
+  description = "プライベートサブネット用のNATゲートウェイを作成するかどうか"
   type        = bool
   default     = true
 }
