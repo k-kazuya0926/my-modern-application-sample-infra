@@ -21,6 +21,6 @@ module "vpc" {
     "10.0.12.0/24"
   ]
 
-  enable_internet_gateway = false
+  enable_internet_gateway = true
   enable_nat_gateway      = false
 }
