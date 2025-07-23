@@ -60,6 +60,7 @@ terraform import <resource_type>.<resource_name> <resource_id>
 - **Cognito**: ユーザー認証と認可
 - **AppConfig**: フィーチャーフラグ管理
 - **SES**: バウンス処理付きメールサービス
+- **Aurora Serverless v2**: 自動スケーリング対応のリレーショナルデータベース
 
 ### Lambdaアーキテクチャパターン
 各Lambda関数は以下を持ちます：
@@ -130,3 +131,4 @@ modules/<service>/
 - ログ保持期間は設定可能
 - X-Rayトレーシングは関数ごとにオプション
 - 環境変数はTerraform経由で渡される
+- **変数とアウトプットのdescriptionは日本語で記述する**
