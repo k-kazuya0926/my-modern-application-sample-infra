@@ -59,13 +59,13 @@ output "cluster_instances" {
   description = "RDSクラスターインスタンスのリスト"
   value = {
     for instance in aws_rds_cluster_instance.this : instance.identifier => {
-      id                = instance.id
-      arn               = instance.arn
-      identifier        = instance.identifier
-      endpoint          = instance.endpoint
-      port              = instance.port
-      engine_version    = instance.engine_version
-      instance_class    = instance.instance_class
+      id                  = instance.id
+      arn                 = instance.arn
+      identifier          = instance.identifier
+      endpoint            = instance.endpoint
+      port                = instance.port
+      engine_version      = instance.engine_version
+      instance_class      = instance.instance_class
       publicly_accessible = instance.publicly_accessible
     }
   }
@@ -94,9 +94,4 @@ output "db_parameter_group_name" {
 output "db_cluster_parameter_group_name" {
   description = "DBクラスターパラメータグループ名"
   value       = var.create_cluster_parameter_group ? aws_rds_cluster_parameter_group.this[0].name : var.db_cluster_parameter_group_name
-}
-
-output "option_group_name" {
-  description = "DBオプショングループ名"
-  value       = var.create_option_group ? aws_db_option_group.this[0].name : var.option_group_name
 }

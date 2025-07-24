@@ -4,7 +4,7 @@ module "aurora_default" {
   github_repository_name = var.github_repository_name
   env                    = local.env
   cluster_name           = "default"
-  database_name          = "default_db"
+  database_name          = "default"
 
   vpc_id     = data.terraform_remote_state.vpc.outputs.vpc_id
   subnet_ids = data.terraform_remote_state.vpc.outputs.private_subnet_ids
@@ -19,10 +19,12 @@ module "aurora_default" {
   # セキュリティグループの許可IP範囲をVPC CIDRに限定
   allowed_cidr_blocks = [data.terraform_remote_state.vpc.outputs.vpc_cidr_block]
 
-  # パラメーターグループとオプショングループの作成を有効化
+  # 暗号化設定
+  storage_encrypted = true
+  # kms_key_id は指定しない場合、AWS管理キーを使用
+
   create_parameter_group         = true
   create_cluster_parameter_group = true
-  create_option_group            = true
 
   # クラスターパラメータの例
   cluster_parameters = [

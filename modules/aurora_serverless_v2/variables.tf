@@ -150,29 +150,9 @@ variable "db_cluster_parameter_group_name" {
   default     = null
 }
 
-variable "create_option_group" {
-  description = "DBオプショングループを作成するかどうか"
-  type        = bool
-  default     = false
-}
-
-variable "option_group_name" {
-  description = "使用するDBオプショングループ名"
-  type        = string
-  default     = null
-}
-
-variable "options" {
-  description = "オプショングループのオプションリスト"
-  type = list(object({
-    option_name = string
-    option_settings = optional(list(object({
-      name  = string
-      value = string
-    })), [])
-  }))
-  default = []
-}
+# Aurora Serverless v2はオプショングループをサポートしていないため、
+# オプショングループ関連の変数は削除されました。
+# 必要な設定はパラメータグループで行ってください。
 
 variable "create_parameter_group" {
   description = "DBパラメータグループを作成するかどうか"
@@ -215,6 +195,18 @@ variable "extended_support_enabled" {
   description = "RDS延長サポートを有効にするかどうか（falseの場合、open-source-rds-extended-support-disabledが設定される）"
   type        = bool
   default     = false
+}
+
+variable "kms_key_id" {
+  description = "データベース暗号化用のKMSキーID（指定しない場合はAWS管理キーを使用）"
+  type        = string
+  default     = null
+}
+
+variable "storage_encrypted" {
+  description = "ストレージ暗号化を有効にするかどうか"
+  type        = bool
+  default     = true
 }
 
 variable "tags" {

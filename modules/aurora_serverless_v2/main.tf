@@ -38,32 +38,8 @@ resource "aws_rds_cluster_parameter_group" "this" {
   })
 }
 
-resource "aws_db_option_group" "this" {
-  count                    = var.create_option_group ? 1 : 0
-  name                     = "${var.github_repository_name}-${var.env}-${var.cluster_name}-options"
-  option_group_description = "Option group for ${var.github_repository_name}-${var.env}-${var.cluster_name}"
-  engine_name              = "aurora-postgresql"
-  major_engine_version     = split(".", var.engine_version)[0]
-
-  dynamic "option" {
-    for_each = var.options
-    content {
-      option_name = option.value.option_name
-
-      dynamic "option_settings" {
-        for_each = option.value.option_settings
-        content {
-          name  = option_settings.value.name
-          value = option_settings.value.value
-        }
-      }
-    }
-  }
-
-  tags = merge(var.tags, {
-    Name = "${var.github_repository_name}-${var.env}-${var.cluster_name}-options"
-  })
-}
+# Aurora Serverless v2はオプショングループをサポートしていないため、
+# 必要な設定はパラメータグループで行います。
 
 # Aurora用セキュリティグループ
 resource "aws_security_group" "aurora" {
@@ -100,6 +76,10 @@ resource "aws_rds_cluster" "this" {
   database_name               = var.database_name
   master_username             = var.master_username
   manage_master_user_password = var.manage_master_user_password
+
+  # 暗号化設定
+  storage_encrypted = var.storage_encrypted
+  kms_key_id        = var.kms_key_id
 
   # RDS延長サポートの設定（作成時のみ設定可能）
   engine_lifecycle_support = var.extended_support_enabled ? null : "open-source-rds-extended-support-disabled"
