@@ -1,4 +1,4 @@
-module "api_gateway_register_user" {
+module "api_gateway_http_register_user" {
   source                 = "../../modules/api_gateway_http"
   github_repository_name = var.github_repository_name
   env                    = local.env
@@ -26,7 +26,7 @@ module "api_gateway_register_user" {
   ]
 }
 
-module "api_gateway_auth_by_cognito" {
+module "api_gateway_http_auth_by_cognito" {
   source                 = "../../modules/api_gateway_http"
   github_repository_name = var.github_repository_name
   env                    = local.env
