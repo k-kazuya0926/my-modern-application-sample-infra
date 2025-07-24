@@ -1,6 +1,69 @@
 data "aws_caller_identity" "current" {}
 data "aws_region" "current" {}
 
+resource "aws_db_parameter_group" "this" {
+  count  = var.create_parameter_group ? 1 : 0
+  name   = "${var.github_repository_name}-${var.env}-${var.cluster_name}-db-params"
+  family = var.parameter_group_family
+
+  dynamic "parameter" {
+    for_each = var.instance_parameters
+    content {
+      name  = parameter.value.name
+      value = parameter.value.value
+    }
+  }
+
+  tags = merge(var.tags, {
+    Name = "${var.github_repository_name}-${var.env}-${var.cluster_name}-db-params"
+  })
+}
+
+resource "aws_rds_cluster_parameter_group" "this" {
+  count  = var.create_cluster_parameter_group ? 1 : 0
+  name   = "${var.github_repository_name}-${var.env}-${var.cluster_name}-cluster-params"
+  family = var.parameter_group_family
+
+  dynamic "parameter" {
+    for_each = var.cluster_parameters
+    content {
+      name  = parameter.value.name
+      value = parameter.value.value
+    }
+  }
+
+  tags = merge(var.tags, {
+    Name = "${var.github_repository_name}-${var.env}-${var.cluster_name}-cluster-params"
+  })
+}
+
+resource "aws_db_option_group" "this" {
+  count                    = var.create_option_group ? 1 : 0
+  name                     = "${var.github_repository_name}-${var.env}-${var.cluster_name}-options"
+  option_group_description = "Option group for ${var.github_repository_name}-${var.env}-${var.cluster_name}"
+  engine_name              = "aurora-postgresql"
+  major_engine_version     = split(".", var.engine_version)[0]
+
+  dynamic "option" {
+    for_each = var.options
+    content {
+      option_name = option.value.option_name
+      
+      dynamic "option_settings" {
+        for_each = option.value.option_settings
+        content {
+          name  = option_settings.value.name
+          value = option_settings.value.value
+        }
+      }
+    }
+  }
+
+  tags = merge(var.tags, {
+    Name = "${var.github_repository_name}-${var.env}-${var.cluster_name}-options"
+  })
+}
+
 # Aurora用セキュリティグループ
 resource "aws_security_group" "aurora" {
   count = var.create_security_group ? 1 : 0
@@ -50,6 +113,8 @@ resource "aws_rds_cluster" "this" {
   db_subnet_group_name   = aws_db_subnet_group.this.name
   vpc_security_group_ids = var.create_security_group ? concat([aws_security_group.aurora[0].id], var.vpc_security_group_ids) : var.vpc_security_group_ids
   
+  db_cluster_parameter_group_name = var.create_cluster_parameter_group ? aws_rds_cluster_parameter_group.this[0].name : var.db_cluster_parameter_group_name
+  
   deletion_protection = var.deletion_protection
   skip_final_snapshot = var.skip_final_snapshot
   final_snapshot_identifier = var.skip_final_snapshot ? null : "${var.github_repository_name}-${var.env}-${var.cluster_name}-final-snapshot"
@@ -66,6 +131,8 @@ resource "aws_rds_cluster_instance" "this" {
   instance_class     = "db.serverless"
   engine             = aws_rds_cluster.this.engine
   engine_version     = aws_rds_cluster.this.engine_version
+  
+  db_parameter_group_name = var.create_parameter_group ? aws_db_parameter_group.this[0].name : var.db_parameter_group_name
   
   performance_insights_enabled = var.performance_insights_enabled
   monitoring_interval          = var.monitoring_interval

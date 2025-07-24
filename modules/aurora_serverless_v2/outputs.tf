@@ -85,3 +85,18 @@ output "aurora_security_group_id" {
   description = "Aurora専用セキュリティグループのID"
   value       = var.create_security_group ? aws_security_group.aurora[0].id : null
 }
+
+output "db_parameter_group_name" {
+  description = "DBパラメータグループ名"
+  value       = var.create_parameter_group ? aws_db_parameter_group.this[0].name : var.db_parameter_group_name
+}
+
+output "db_cluster_parameter_group_name" {
+  description = "DBクラスターパラメータグループ名"
+  value       = var.create_cluster_parameter_group ? aws_rds_cluster_parameter_group.this[0].name : var.db_cluster_parameter_group_name
+}
+
+output "option_group_name" {
+  description = "DBオプショングループ名"
+  value       = var.create_option_group ? aws_db_option_group.this[0].name : var.option_group_name
+}

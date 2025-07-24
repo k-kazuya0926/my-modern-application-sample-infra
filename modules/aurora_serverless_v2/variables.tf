@@ -28,7 +28,7 @@ variable "database_name" {
 variable "master_username" {
   description = "データベースのマスターユーザー名"
   type        = string
-  default     = "dbadmin"
+  default     = "postgres"
 }
 
 variable "manage_master_user_password" {
@@ -40,7 +40,7 @@ variable "manage_master_user_password" {
 variable "min_capacity" {
   description = "Aurora Serverless v2の最小キャパシティ"
   type        = number
-  default     = 0.5
+  default     = 0
 }
 
 variable "max_capacity" {
@@ -87,7 +87,7 @@ variable "vpc_security_group_ids" {
 variable "backup_retention_period" {
   description = "バックアップ保持期間（日数）"
   type        = number
-  default     = 7
+  default     = 1
 }
 
 variable "preferred_backup_window" {
@@ -136,6 +136,78 @@ variable "seconds_until_auto_pause" {
   description = "自動一時停止までの秒数（min_capacityが0の場合のみ有効）。最小: 300秒、最大: 86400秒"
   type        = number
   default     = 300
+}
+
+variable "db_parameter_group_name" {
+  description = "使用するDBパラメータグループ名"
+  type        = string
+  default     = null
+}
+
+variable "db_cluster_parameter_group_name" {
+  description = "使用するDBクラスターパラメータグループ名"
+  type        = string
+  default     = null
+}
+
+variable "create_option_group" {
+  description = "DBオプショングループを作成するかどうか"
+  type        = bool
+  default     = false
+}
+
+variable "option_group_name" {
+  description = "使用するDBオプショングループ名"
+  type        = string
+  default     = null
+}
+
+variable "options" {
+  description = "オプショングループのオプションリスト"
+  type = list(object({
+    option_name = string
+    option_settings = optional(list(object({
+      name  = string
+      value = string
+    })), [])
+  }))
+  default = []
+}
+
+variable "create_parameter_group" {
+  description = "DBパラメータグループを作成するかどうか"
+  type        = bool
+  default     = false
+}
+
+variable "create_cluster_parameter_group" {
+  description = "DBクラスターパラメータグループを作成するかどうか"
+  type        = bool
+  default     = false
+}
+
+variable "parameter_group_family" {
+  description = "パラメータグループファミリー"
+  type        = string
+  default     = "aurora-postgresql17"
+}
+
+variable "cluster_parameters" {
+  description = "クラスターパラメータグループのパラメータリスト"
+  type = list(object({
+    name  = string
+    value = string
+  }))
+  default = []
+}
+
+variable "instance_parameters" {
+  description = "インスタンスパラメータグループのパラメータリスト"
+  type = list(object({
+    name  = string
+    value = string
+  }))
+  default = []
 }
 
 variable "tags" {
