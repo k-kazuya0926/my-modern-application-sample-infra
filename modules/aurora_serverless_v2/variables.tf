@@ -204,10 +204,17 @@ variable "cluster_parameters" {
 variable "instance_parameters" {
   description = "インスタンスパラメータグループのパラメータリスト"
   type = list(object({
-    name  = string
-    value = string
+    name         = string
+    value        = string
+    apply_method = optional(string, "immediate")
   }))
   default = []
+}
+
+variable "extended_support_enabled" {
+  description = "RDS延長サポートを有効にするかどうか（falseの場合、open-source-rds-extended-support-disabledが設定される）"
+  type        = bool
+  default     = false
 }
 
 variable "tags" {

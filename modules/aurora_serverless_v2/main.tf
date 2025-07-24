@@ -9,8 +9,9 @@ resource "aws_db_parameter_group" "this" {
   dynamic "parameter" {
     for_each = var.instance_parameters
     content {
-      name  = parameter.value.name
-      value = parameter.value.value
+      name         = parameter.value.name
+      value        = parameter.value.value
+      apply_method = parameter.value.apply_method
     }
   }
 
@@ -48,7 +49,7 @@ resource "aws_db_option_group" "this" {
     for_each = var.options
     content {
       option_name = option.value.option_name
-      
+
       dynamic "option_settings" {
         for_each = option.value.option_settings
         content {
@@ -67,7 +68,7 @@ resource "aws_db_option_group" "this" {
 # Aurora用セキュリティグループ
 resource "aws_security_group" "aurora" {
   count = var.create_security_group ? 1 : 0
-  
+
   name        = "${var.github_repository_name}-${var.env}-${var.cluster_name}-aurora-sg"
   description = "Security group for Aurora Serverless v2 cluster"
   vpc_id      = var.vpc_id
@@ -92,35 +93,38 @@ resource "aws_security_group" "aurora" {
 }
 
 resource "aws_rds_cluster" "this" {
-  cluster_identifier      = "${var.github_repository_name}-${var.env}-${var.cluster_name}"
-  engine                  = "aurora-postgresql"
-  engine_mode             = "provisioned"
-  engine_version          = var.engine_version
-  database_name           = var.database_name
-  master_username         = var.master_username
+  cluster_identifier          = "${var.github_repository_name}-${var.env}-${var.cluster_name}"
+  engine                      = "aurora-postgresql"
+  engine_mode                 = "provisioned"
+  engine_version              = var.engine_version
+  database_name               = var.database_name
+  master_username             = var.master_username
   manage_master_user_password = var.manage_master_user_password
-  
+
+  # RDS延長サポートの設定（作成時のみ設定可能）
+  engine_lifecycle_support = var.extended_support_enabled ? null : "open-source-rds-extended-support-disabled"
+
   serverlessv2_scaling_configuration {
     max_capacity             = var.max_capacity
     min_capacity             = var.min_capacity
     seconds_until_auto_pause = var.min_capacity == 0 ? var.seconds_until_auto_pause : null
   }
 
-  backup_retention_period = var.backup_retention_period
-  preferred_backup_window = var.preferred_backup_window
+  backup_retention_period      = var.backup_retention_period
+  preferred_backup_window      = var.preferred_backup_window
   preferred_maintenance_window = var.preferred_maintenance_window
-  
+
   db_subnet_group_name   = aws_db_subnet_group.this.name
   vpc_security_group_ids = var.create_security_group ? concat([aws_security_group.aurora[0].id], var.vpc_security_group_ids) : var.vpc_security_group_ids
-  
+
   db_cluster_parameter_group_name = var.create_cluster_parameter_group ? aws_rds_cluster_parameter_group.this[0].name : var.db_cluster_parameter_group_name
-  
-  deletion_protection = var.deletion_protection
-  skip_final_snapshot = var.skip_final_snapshot
+
+  deletion_protection       = var.deletion_protection
+  skip_final_snapshot       = var.skip_final_snapshot
   final_snapshot_identifier = var.skip_final_snapshot ? null : "${var.github_repository_name}-${var.env}-${var.cluster_name}-final-snapshot"
-  
+
   enabled_cloudwatch_logs_exports = var.enabled_cloudwatch_logs_exports
-  
+
   tags = var.tags
 }
 
@@ -131,20 +135,20 @@ resource "aws_rds_cluster_instance" "this" {
   instance_class     = "db.serverless"
   engine             = aws_rds_cluster.this.engine
   engine_version     = aws_rds_cluster.this.engine_version
-  
+
   db_parameter_group_name = var.create_parameter_group ? aws_db_parameter_group.this[0].name : var.db_parameter_group_name
-  
+
   performance_insights_enabled = var.performance_insights_enabled
   monitoring_interval          = var.monitoring_interval
   monitoring_role_arn          = var.monitoring_interval > 0 ? aws_iam_role.rds_enhanced_monitoring[0].arn : null
-  
+
   tags = var.tags
 }
 
 resource "aws_db_subnet_group" "this" {
   name       = "${var.github_repository_name}-${var.env}-${var.cluster_name}-subnet-group"
   subnet_ids = var.subnet_ids
-  
+
   tags = merge(var.tags, {
     Name = "${var.github_repository_name}-${var.env}-${var.cluster_name}-subnet-group"
   })
