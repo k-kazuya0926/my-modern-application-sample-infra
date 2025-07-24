@@ -87,7 +87,7 @@ variable "vpc_security_group_ids" {
 variable "backup_retention_period" {
   description = "バックアップ保持期間（日数）"
   type        = number
-  default     = 1
+  default     = 7
 }
 
 variable "preferred_backup_window" {
