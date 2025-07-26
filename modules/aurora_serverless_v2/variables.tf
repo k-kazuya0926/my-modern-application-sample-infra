@@ -209,6 +209,12 @@ variable "storage_encrypted" {
   default     = true
 }
 
+variable "enable_http_endpoint" {
+  description = "Aurora Serverless Data APIを有効にするかどうか"
+  type        = bool
+  default     = false
+}
+
 variable "tags" {
   description = "リソースに割り当てるタグのマップ"
   type        = map(string)
