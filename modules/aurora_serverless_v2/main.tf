@@ -160,3 +160,14 @@ resource "aws_iam_role_policy_attachment" "rds_enhanced_monitoring" {
   role       = aws_iam_role.rds_enhanced_monitoring[0].name
   policy_arn = "arn:aws:iam::aws:policy/service-role/AmazonRDSEnhancedMonitoringRole"
 }
+
+# CloudWatch Logs Groups for RDS logs
+resource "aws_cloudwatch_log_group" "postgresql" {
+  count             = contains(var.enabled_cloudwatch_logs_exports, "postgresql") ? 1 : 0
+  name              = "/aws/rds/cluster/${aws_rds_cluster.this.cluster_identifier}/postgresql"
+  retention_in_days = var.log_retention_days
+
+  tags = merge(var.tags, {
+    Name = "${var.github_repository_name}-${var.env}-${var.cluster_name}-postgresql-logs"
+  })
+}

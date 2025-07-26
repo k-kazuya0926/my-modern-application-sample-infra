@@ -73,4 +73,5 @@ module "aurora_serverless_v2_default" {
   deletion_protection          = false
   performance_insights_enabled = false
   monitoring_interval          = 0
+  log_retention_days           = 7
 }
