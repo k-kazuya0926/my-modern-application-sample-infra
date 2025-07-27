@@ -64,6 +64,13 @@ resource "aws_iam_role_policy_attachment" "xray_write_only" {
   policy_arn = "arn:aws:iam::aws:policy/AWSXRayDaemonWriteAccess"
 }
 
+# VPC Lambda用のENI管理権限
+resource "aws_iam_role_policy_attachment" "vpc_access_execution" {
+  count      = var.vpc_config != null ? 1 : 0
+  role       = aws_iam_role.execution_role.name
+  policy_arn = "arn:aws:iam::aws:policy/service-role/AWSLambdaVPCAccessExecutionRole"
+}
+
 resource "aws_lambda_function" "this" {
   function_name = "${var.github_repository_name}-${var.env}-${var.function_name}"
   role          = aws_iam_role.execution_role.arn
@@ -85,6 +92,14 @@ resource "aws_lambda_function" "this" {
 
   tracing_config {
     mode = var.enable_tracing ? "Active" : "PassThrough"
+  }
+
+  dynamic "vpc_config" {
+    for_each = var.vpc_config != null ? [var.vpc_config] : []
+    content {
+      subnet_ids         = vpc_config.value.subnet_ids
+      security_group_ids = vpc_config.value.security_group_ids
+    }
   }
 
   depends_on = [

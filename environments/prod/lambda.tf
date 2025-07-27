@@ -350,3 +350,68 @@ module "lambda_fan_out_consumer_2" {
     }
   ]
 }
+
+module "lambda_access_vpc" {
+  source                 = "../../modules/lambda"
+  github_repository_name = var.github_repository_name
+  env                    = local.env
+  function_name          = "access-vpc"
+  image_uri              = "${module.ecr_access_vpc.repository_url}:sha-a58c98001cf5f981e4b0b46edcbedf2948ce309c"
+  timeout                = 30
+
+  environment_variables = {
+    ENV           = local.env
+    DATABASE_HOST = data.terraform_remote_state.rds.outputs.cluster_endpoint
+    DATABASE_NAME = data.terraform_remote_state.rds.outputs.database_name
+    DATABASE_PORT = "5432"
+  }
+
+  vpc_config = {
+    subnet_ids         = data.terraform_remote_state.vpc.outputs.private_subnet_ids
+    security_group_ids = [aws_security_group.lambda_access_vpc.id]
+  }
+
+  policy_statements = [
+    {
+      effect = "Allow"
+      actions = [
+        "rds-data:BatchExecuteStatement",
+        "rds-data:BeginTransaction",
+        "rds-data:CommitTransaction",
+        "rds-data:ExecuteStatement",
+        "rds-data:RollbackTransaction"
+      ]
+      resources = [
+        data.terraform_remote_state.rds.outputs.cluster_arn
+      ]
+    }
+  ]
+}
+
+# Lambda to VPC セキュリティグループ
+resource "aws_security_group" "lambda_access_vpc" {
+  name        = "${var.github_repository_name}-${local.env}-lambda-access-vpc"
+  description = "Security group for Lambda functions to access VPC"
+  vpc_id      = data.terraform_remote_state.vpc.outputs.vpc_id
+
+  egress {
+    from_port   = 5432
+    to_port     = 5432
+    protocol    = "tcp"
+    cidr_blocks = [data.terraform_remote_state.vpc.outputs.vpc_cidr_block]
+    description = "PostgreSQL/Aurora access"
+  }
+
+  egress {
+    from_port   = 443
+    to_port     = 443
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+    description = "HTTPS for AWS API calls"
+  }
+
+  tags = {
+    Name        = "${var.github_repository_name}-${local.env}-lambda-access-vpc"
+    Environment = local.env
+  }
+}

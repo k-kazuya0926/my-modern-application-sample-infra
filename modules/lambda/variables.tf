@@ -94,3 +94,12 @@ variable "policy_statements" {
   }))
   default = []
 }
+
+variable "vpc_config" {
+  description = "VPC設定（オプション）"
+  type = object({
+    subnet_ids         = list(string)
+    security_group_ids = list(string)
+  })
+  default = null
+}

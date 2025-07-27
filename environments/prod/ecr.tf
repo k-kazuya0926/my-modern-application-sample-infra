@@ -109,3 +109,10 @@ module "ecr_fan_out_consumer_2" {
   env                    = local.env
   ecr_repository_name    = "fan-out-consumer-2"
 }
+
+module "ecr_access_vpc" {
+  source                 = "../../modules/ecr"
+  github_repository_name = var.github_repository_name
+  env                    = local.env
+  ecr_repository_name    = "access-vpc"
+}
