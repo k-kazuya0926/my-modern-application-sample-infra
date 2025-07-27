@@ -17,6 +17,7 @@ https://github.com/k-kazuya0926/my-modern-application-sample
 - **ECR**: Dockerコンテナレジストリ
 - **IAM**: アクセス権限管理
 - **Lambda**: サーバーレス処理
+- **RDS**: Aurora Serverless v2によるリレーショナルデータベース
 - **S3**: オブジェクトストレージ（読み取り用、書き込み用、コンテンツ用、メール本文用）
 - **SES**: メール送信サービス
 - **SNS**: 通知サービス
@@ -49,15 +50,15 @@ environments/          # 環境別設定
 ├── prod/              # 本番環境
 │   ├── data_stores/   # データストア設定
 │   │   └── dynamodb/  # DynamoDB設定
+│   │   └── rds/       # RDS設定
+│   ├── vpc/           # VPC設定
 │   ├── api_gateway.tf # API Gateway
 │   └── ...
 └── backend.hcl.example # バックエンド設定例
 
 modules/               # 再利用可能モジュール
-├── lambda/            # Lambda関数
-├── api_gateway_http/  # API Gateway
-├── s3/                # S3バケット
-├── dynamodb/          # DynamoDB
+├── api_gateway_http/  # API Gateway HTTP API
+├── appconfig/         # AppConfig
 └── ...
 ```
 
@@ -72,3 +73,4 @@ modules/               # 再利用可能モジュール
 - OAuth、OAuth認証、OpenID Connectの違いを整理して理解できる本
 - OAuth・OIDCへの攻撃と対策を整理して理解できる本(リダイレクトへの攻撃編)
 - AWSクラウドネイティブデザインパターン
+- 基礎から学ぶ サーバーレス開発
