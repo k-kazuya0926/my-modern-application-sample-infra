@@ -351,12 +351,12 @@ module "lambda_fan_out_consumer_2" {
   ]
 }
 
-module "lambda_access_vpc" {
+module "lambda_access_rds" {
   source                 = "../../modules/lambda"
   github_repository_name = var.github_repository_name
   env                    = local.env
-  function_name          = "access-vpc"
-  image_uri              = "${module.ecr_access_vpc.repository_url}:sha-a58c98001cf5f981e4b0b46edcbedf2948ce309c"
+  function_name          = "access-rds"
+  image_uri              = "${module.ecr_access_rds.repository_url}:dummy"
   timeout                = 30
 
   environment_variables = {
@@ -368,7 +368,7 @@ module "lambda_access_vpc" {
 
   vpc_config = {
     subnet_ids         = data.terraform_remote_state.vpc.outputs.private_subnet_ids
-    security_group_ids = [aws_security_group.lambda_access_vpc.id]
+    security_group_ids = [aws_security_group.lambda_access_rds.id]
   }
 
   policy_statements = [
@@ -398,8 +398,8 @@ module "lambda_access_vpc" {
 }
 
 # Lambda to VPC セキュリティグループ
-resource "aws_security_group" "lambda_access_vpc" {
-  name        = "${var.github_repository_name}-${local.env}-lambda-access-vpc"
+resource "aws_security_group" "lambda_access_rds" {
+  name        = "${var.github_repository_name}-${local.env}-lambda-access-rds"
   description = "Security group for Lambda functions to access VPC"
   vpc_id      = data.terraform_remote_state.vpc.outputs.vpc_id
 
@@ -420,7 +420,7 @@ resource "aws_security_group" "lambda_access_vpc" {
   }
 
   tags = {
-    Name        = "${var.github_repository_name}-${local.env}-lambda-access-vpc"
+    Name        = "${var.github_repository_name}-${local.env}-lambda-access-rds"
     Environment = local.env
   }
 }

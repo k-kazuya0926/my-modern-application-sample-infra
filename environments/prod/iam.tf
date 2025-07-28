@@ -50,7 +50,7 @@ data "aws_iam_policy_document" "github_actions" {
       module.ecr_award_points.repository_arn,
       module.ecr_fan_out_consumer_1.repository_arn,
       module.ecr_fan_out_consumer_2.repository_arn,
-      module.ecr_access_vpc.repository_arn,
+      module.ecr_access_rds.repository_arn,
     ]
   }
 
@@ -97,8 +97,8 @@ data "aws_iam_policy_document" "github_actions" {
       "${module.lambda_fan_out_consumer_1.function_arn}:*",
       module.lambda_fan_out_consumer_2.function_arn,
       "${module.lambda_fan_out_consumer_2.function_arn}:*",
-      module.lambda_access_vpc.function_arn,
-      "${module.lambda_access_vpc.function_arn}:*"
+      module.lambda_access_rds.function_arn,
+      "${module.lambda_access_rds.function_arn}:*"
     ]
   }
 }
