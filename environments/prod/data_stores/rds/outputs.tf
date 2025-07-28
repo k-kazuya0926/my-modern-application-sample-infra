@@ -32,3 +32,8 @@ output "security_group_ids" {
   description = "クラスターに関連付けられたセキュリティグループID"
   value       = module.aurora_serverless_v2_default.security_group_ids
 }
+
+output "cluster_resource_id" {
+  description = "RDSクラスターリソースID（IAMデータベース認証用）"
+  value       = module.aurora_serverless_v2_default.cluster_resource_id
+}

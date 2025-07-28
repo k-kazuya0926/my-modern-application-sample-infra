@@ -103,8 +103,10 @@ resource "aws_rds_cluster" "this" {
   skip_final_snapshot       = var.skip_final_snapshot
   final_snapshot_identifier = var.skip_final_snapshot ? null : "${var.github_repository_name}-${var.env}-${var.cluster_name}-final-snapshot"
 
-  enabled_cloudwatch_logs_exports = var.enabled_cloudwatch_logs_exports
-  enable_http_endpoint            = var.enable_http_endpoint
+  enabled_cloudwatch_logs_exports      = var.enabled_cloudwatch_logs_exports
+  enable_http_endpoint                 = var.enable_http_endpoint
+  iam_database_authentication_enabled = var.iam_database_authentication_enabled
+  apply_immediately                    = var.apply_immediately
 
   tags = var.tags
 }

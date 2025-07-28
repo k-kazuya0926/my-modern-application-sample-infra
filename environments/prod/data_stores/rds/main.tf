@@ -18,6 +18,10 @@ module "aurora_serverless_v2_default" {
 
   # Data API設定
   enable_http_endpoint = true
+  
+  # IAMデータベース認証を有効化
+  iam_database_authentication_enabled = true
+  apply_immediately                   = true
 
   create_parameter_group         = true
   create_cluster_parameter_group = true

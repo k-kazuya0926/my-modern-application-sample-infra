@@ -384,6 +384,15 @@ module "lambda_access_vpc" {
       resources = [
         data.terraform_remote_state.rds.outputs.cluster_arn
       ]
+    },
+    {
+      effect = "Allow"
+      actions = [
+        "rds-db:connect"
+      ]
+      resources = [
+        "arn:aws:rds-db:${data.aws_region.current.id}:${data.aws_caller_identity.current.account_id}:dbuser:${data.terraform_remote_state.rds.outputs.cluster_resource_id}/postgres"
+      ]
     }
   ]
 }

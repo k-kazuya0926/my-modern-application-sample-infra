@@ -215,6 +215,18 @@ variable "enable_http_endpoint" {
   default     = false
 }
 
+variable "iam_database_authentication_enabled" {
+  description = "IAMデータベース認証を有効にするかどうか"
+  type        = bool
+  default     = false
+}
+
+variable "apply_immediately" {
+  description = "変更を即座に適用するかどうか（メンテナンス時間を待たない）"
+  type        = bool
+  default     = false
+}
+
 variable "log_retention_days" {
   description = "CloudWatch Logsの保持期間（日）"
   type        = number
