@@ -47,7 +47,7 @@ variable "memory" {
   default     = 512
 
   validation {
-    condition = var.memory >= 512 && var.memory <= 30720
+    condition     = var.memory >= 512 && var.memory <= 30720
     error_message = "メモリは512MB以上30720MB以下である必要があります。"
   }
 }
@@ -83,7 +83,7 @@ variable "environment_variables" {
 variable "secrets" {
   description = "Secrets Managerからのシークレット設定"
   type = list(object({
-    name      = string
+    name       = string
     value_from = string
   }))
   default = []

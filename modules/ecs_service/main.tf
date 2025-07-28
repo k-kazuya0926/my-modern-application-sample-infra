@@ -128,7 +128,7 @@ resource "aws_ecs_task_definition" "main" {
     {
       name  = var.container_name
       image = var.image_uri
-      
+
       portMappings = var.port_mappings
 
       environment = [
