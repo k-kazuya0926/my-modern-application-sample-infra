@@ -17,7 +17,7 @@ https://github.com/k-kazuya0926/my-modern-application-sample
 - **ECR**: Dockerコンテナレジストリ
 - **IAM**: アクセス権限管理
 - **Lambda**: サーバーレス処理
-- **RDS**: Aurora Serverless v2によるリレーショナルデータベース
+- **RDS**: Aurora PostgreSQL Serverless v2によるリレーショナルデータベース
 - **S3**: オブジェクトストレージ（読み取り用、書き込み用、コンテンツ用、メール本文用）
 - **SES**: メール送信サービス
 - **SNS**: 通知サービス
