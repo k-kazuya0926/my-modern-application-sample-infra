@@ -173,3 +173,49 @@ resource "aws_cloudwatch_log_group" "postgresql" {
     Name = "${var.github_repository_name}-${var.env}-${var.cluster_name}-postgresql-logs"
   })
 }
+
+# IAM認証用のpostgresユーザーにrds_iam権限を付与
+resource "null_resource" "grant_rds_iam_to_postgres" {
+  count = var.iam_database_authentication_enabled ? 1 : 0
+
+  depends_on = [aws_rds_cluster_instance.this]
+
+  provisioner "local-exec" {
+    command = <<-EOT
+      # RDSクラスターが完全に利用可能になるまで待機
+      echo "Waiting for RDS cluster to be available..."
+      aws rds wait db-cluster-available --db-cluster-identifier "${aws_rds_cluster.this.cluster_identifier}"
+      
+      # GRANT rds_iam TO postgres を実行
+      echo "Executing GRANT rds_iam TO postgres..."
+      aws rds-data execute-statement \
+        --resource-arn "${aws_rds_cluster.this.arn}" \
+        --secret-arn "${aws_rds_cluster.this.master_user_secret[0].secret_arn}" \
+        --database "${var.database_name}" \
+        --sql "GRANT rds_iam TO postgres;"
+      
+      # 結果を確認
+      echo "Verifying GRANT execution..."
+      RESULT=$(aws rds-data execute-statement \
+        --resource-arn "${aws_rds_cluster.this.arn}" \
+        --secret-arn "${aws_rds_cluster.this.master_user_secret[0].secret_arn}" \
+        --database "${var.database_name}" \
+        --sql "SELECT pg_has_role('postgres', 'rds_iam', 'MEMBER') as has_rds_iam_role;" \
+        --query 'records[0][0].booleanValue' \
+        --output text)
+      
+      if [ "$RESULT" = "True" ]; then
+        echo "SUCCESS: rds_iam role granted to postgres user"
+      else
+        echo "ERROR: Failed to grant rds_iam role to postgres user"
+        exit 1
+      fi
+    EOT
+  }
+
+  triggers = {
+    cluster_id = aws_rds_cluster.this.id
+    # 強制再実行のためのタイムスタンプ
+    timestamp = timestamp()
+  }
+}
