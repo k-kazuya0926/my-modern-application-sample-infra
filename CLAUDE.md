@@ -16,13 +16,13 @@
 cd environments/prod
 
 # バックエンド設定でTerraformを初期化
-terraform init -backend-config=backend.hcl
+aea terraform init -backend-config=backend.hcl
 
 # インフラストラクチャの変更を計画
-terraform plan
+aea terraform plan
 
 # インフラストラクチャの変更を適用
-terraform apply
+aea terraform apply
 
 # 設定を検証
 terraform validate
@@ -31,10 +31,10 @@ terraform validate
 terraform fmt -recursive
 
 # 現在の状態を表示
-terraform show
+aea terraform show
 
 # 既存リソースをインポート
-terraform import <resource_type>.<resource_name> <resource_id>
+aea terraform import <resource_type>.<resource_name> <resource_id>
 ```
 
 ### バックエンド設定
