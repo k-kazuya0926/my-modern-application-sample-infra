@@ -8,6 +8,7 @@ https://github.com/k-kazuya0926/my-modern-application-sample
 ### Infrastructure as Code
 - **Terraform**: 1.12.2
 - **AWS Provider**: 6.0.0
+- **Google Cloud Provider**: 6.48.0
 
 ### AWSサービス
 - **API Gateway**: RESTful APIエンドポイント、IDトークンの検証
@@ -46,19 +47,21 @@ https://github.com/k-kazuya0926/my-modern-application-sample
 ## ディレクトリ構成
 
 ```
-environments/          # 環境別設定
-├── prod/              # 本番環境
-│   ├── data_stores/   # データストア設定
-│   │   └── dynamodb/  # DynamoDB設定
-│   │   └── rds/       # RDS設定
-│   ├── vpc/           # VPC設定
-│   ├── api_gateway.tf # API Gateway
-│   └── ...
-└── backend.hcl.example # バックエンド設定例
-
-modules/               # 再利用可能モジュール
-├── api_gateway_http/  # API Gateway HTTP API
-├── appconfig/         # AppConfig
+aws/                   # AWSインフラストラクチャ
+├── environments/      # 環境別設定
+│   ├── prod/          # 本番環境
+│   │   ├── data_stores/ # データストア設定
+│   │   │   └── dynamodb/ # DynamoDB設定
+│   │   │   └── rds/   # RDS設定
+│   │   ├── vpc/       # VPC設定
+│   │   ├── api_gateway.tf # API Gateway
+│   │   └── ...
+│   └── backend.hcl.example # バックエンド設定例
+└── modules/           # 再利用可能モジュール
+    ├── api_gateway_http/ # API Gateway HTTP API
+    ├── appconfig/     # AppConfig
+    └── ...
+google_cloud/          # Google Cloudインフラストラクチャ
 └── ...
 ```
 
