@@ -1,8 +1,3 @@
-provider "google" {
-  project = var.project_id
-  region  = "asia-northeast1"
-}
-
 resource "google_compute_instance" "default" {
   name         = "test"
   machine_type = "e2-micro"
