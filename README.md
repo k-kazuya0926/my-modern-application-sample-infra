@@ -61,7 +61,13 @@ aws/                   # AWSインフラストラクチャ
     ├── api_gateway_http/ # API Gateway HTTP API
     ├── appconfig/     # AppConfig
     └── ...
-google_cloud/          # Google Cloudインフラストラクチャ
+google/                # Google Cloudインフラストラクチャ
+├── environments/      # 環境別設定
+│   ├── prod/          # 本番環境
+│   │   └── ...
+│   └── backend.hcl.example # バックエンド設定例
+├── modules/           # 再利用可能モジュール
+│   └── ...
 └── ...
 ```
 
@@ -77,3 +83,5 @@ google_cloud/          # Google Cloudインフラストラクチャ
 - OAuth・OIDCへの攻撃と対策を整理して理解できる本(リダイレクトへの攻撃編)
 - AWSクラウドネイティブデザインパターン
 - 基礎から学ぶ サーバーレス開発
+- 図解即戦力 Google Cloudのしくみと技術がこれ1冊でしっかりわかる教科書
+- Google Cloud Platformで学ぶTerraform 〜基礎編〜 第2版
