@@ -39,5 +39,8 @@ terraform.rc
 # Ignore backend configuration file
 backend.hcl
 
-# Claude settings
-settings.local.json
+# Claude
+.claude/settings.local.json
+
+# Serena
+.serena/cache/

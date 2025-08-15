@@ -110,7 +110,7 @@ terraform apply
 - `aws/environments/prod/data_stores/rds/`で個別に管理されるAurora PostgreSQL
 - `aws/environments/prod/vpc/`で個別に管理されるVPCリソース
 - `terraform_remote_state`を使用したレイヤー間のリモート状態参照
-- Google Cloudは`google_cloud/basic/`でローカル状態管理
+- Google CloudはGCS状態管理
 
 ## 開発ワークフロー
 
@@ -139,7 +139,7 @@ terraform apply
 - Terraform: 1.12.2
 - AWSプロバイダー: 6.0.0
 - Google Cloudプロバイダー: 6.48.0
-- バックエンド: AWSではDynamoDBによる状態ロック付きS3、Google Cloudではローカル状態
+- バックエンド: AWSではDynamoDBによる状態ロック付きS3、Google CloudではGCS
 
 ## ファイル構成
 
@@ -186,4 +186,4 @@ google_cloud/basic/
 - リージョン: asia-northeast1（東京）
 - プロジェクトIDは変数で管理
 - 現在は基本的なCompute Engineインスタンス構成
-- ローカル状態管理を使用
+- GCS状態管理を使用
