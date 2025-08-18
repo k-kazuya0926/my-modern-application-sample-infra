@@ -85,3 +85,4 @@ google/                # Google Cloudインフラストラクチャ
 - 基礎から学ぶ サーバーレス開発
 - 図解即戦力 Google Cloudのしくみと技術がこれ1冊でしっかりわかる教科書
 - Google Cloud Platformで学ぶTerraform 〜基礎編〜 第2版
+- Google Cloud Platformで学ぶTerraform 〜実践編〜 第2版

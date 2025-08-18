@@ -9,8 +9,8 @@ terraform {
   }
 
   backend "gcs" {
-    # 他の項目は terraform init -backend-config=backend.hcl により設定
-    prefix = "prod"
+    # 他の項目は terraform init -backend-config=../backend.hcl により設定
+    prefix = "prod/two-layer-architecture"
   }
 }
 
