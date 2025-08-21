@@ -1,4 +1,4 @@
-output "project_id" {
+output "gke_project_id" {
   description = "The ID of the project"
   value       = module.project.project_id
 }
