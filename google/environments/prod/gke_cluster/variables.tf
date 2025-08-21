@@ -1,0 +1,14 @@
+variable "project_id" {
+  description = "Google Cloud project ID"
+  type        = string
+}
+
+variable "service_name" {
+  description = "The name of the service"
+  type        = string
+}
+
+variable "billing_account" {
+  description = "The billing account ID"
+  type        = string
+}

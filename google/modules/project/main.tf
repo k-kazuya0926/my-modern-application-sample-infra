@@ -4,6 +4,7 @@ resource "google_project" "microservice" {
   # 組織を使う場合は有効化する
   #   org_id = var.org_id
   billing_account = var.billing_account
+  deletion_policy = "DELETE"
 }
 
 resource "google_project_service" "api_service" {
